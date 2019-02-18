@@ -49,7 +49,10 @@ mysql.createConnection({
         res.redirect('/login')
     });
     app.get('/login', async (req, res) =>{
-        if(req.query.e == "1"){
+        if(req.session.nanSecondeGen){
+            res.redirect('/Accueil');
+        }
+        else if(req.query.e == "1"){
             //const error = req.session.errors;
             //req.session.errors = null;
             //console.log(error + ' ' + req.session.errors);
