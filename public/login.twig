@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="fr">
+	<head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8"> 
+        <meta charset="utf-8">
+        <title>NaN | École de programmation informatique gratuite, atypique et open-source</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <link rel="icon" type="image/png" href="assets/images/icon/logo.png" />
+        <link href="Assets/Css/fontawesome-all.css" rel="stylesheet">
+        <link href="Assets/Css/bootstrap.min.css" rel="stylesheet">
+        <link href="Assets/Css/mdb.min.css" rel="stylesheet">
+        <link href="Assets/Css/jquery.notify.css" rel="stylesheet">
+
+        <link href="Assets/Css/login.css" rel="stylesheet">
+
+  <!-- If you'd like to support IE8 (for Video.js versions prior to v7) -->
+        <link href="https://fonts.googleapis.com/css?family=Libre+Baskerville|Merriweather|Roboto+Slab" rel="stylesheet">
+        <script src="Assets/Js/instascan.min.js"></script>
+        <script>
+            function limit(field) {
+                if(field.value.length > 550){
+                    field.value = field.value.substring(0, 550);
+                }
+            }
+            function limitFile(field) {
+                if(field.value.length > 125){
+                    field.value = field.value.substring(0, 125);
+                }
+            }
+            function horodatage(date) {
+                var post = new Date(date).getTime();
+                var month = new Date(date).getMonth();
+                month = parseInt(month, 10) + 1;
+                var day = new Date(date).getDate();
+                    var year = new Date(date).getFullYear();
+                    var hour = new Date(date).getHours();
+                    var min = new Date(date).getMinutes();
+                var atMoment = new Date().getTime();
+                post /= 1000;
+                atMoment /= 1000;
+                var fior = parseInt((atMoment - post), 10);
+                if (fior >= 86400) {
+                    if (parseInt((fior/86400), 10) == 1){
+
+                        document.write("Hier, " + hour + "H:"+ min +"min");
+                    }
+                    else{
+                        document.write("Le " + day +"-"+ month +"-"+ year +", "+ hour + "H:"+ min +"min");
+                    }
+                }
+                else if(fior >= 3600 && fior < 86400){
+                    if(parseInt((fior/3600), 10) == 1){
+                        document.write("il y a " + parseInt((fior/3600), 10) + " Hr");
+                    }
+                    else{
+                        document.write("il y a " + parseInt((fior/3600), 10) + " Hrs");
+                    }
+                }
+                else if(fior >= 60 && fior < 3600){
+                    if(parseInt((fior/60), 10) == 1)
+                        document.write("il y a " + parseInt((fior/60), 10) + " Min");
+                    else
+                        document.write("il y a " + parseInt((fior/60), 10) + " Mins");
+                }
+                else{
+                    if (fior == 0){
+                        document.write("A l'instant");
+                    }
+                    document.write("il y a " + fior + " Sec");
+                }
+            }
+        </script>
+    </head>
+    
+    <body>
+        <div class="log">
+            <div class="ele">
+                <form action="/login" method="post">
+                    <input type="email" class="ggg" name="user" placeholder="E-MAIL OU PSEUDO" required="">
+                    <input type="password" class="ggg" name="pass" placeholder="PASSWORD" required="">
+                    <h6 class="choiceQr">Avec Code Bar ?</h6>
+                    <h6> <a href="#">Mot de Pass Oublié?</a></h6>
+                    <div class="clearfix"></div>
+                    <input type="submit" value="Connexion" name="login">
+                </form>
+                <video id="preview" class="none"></video>
+            </div>
+        </div>
+
+        <form action="/loginQ" id="form" method="post">
+                    <input type="email" id="em" name="user" placeholder="E-MAIL OU PSEUDO" required="">
+                    <input type="password" id="ps" name="pass" placeholder="PASSWORD" required="">
+                    <div class="clearfix"></div>
+                </form>
+        <script src="/socket.io/socket.io.js"></script>
+            <script type="text/javascript" src="Assets/Js/jquery-3.3.1.min.js"></script>
+            <script type="text/javascript" src="Assets/Js/fontawesome-all.js"></script>
+            <script type="text/javascript" src="Assets/Js/jquery.notify.js"></script>
+            <script type="text/javascript" src="Assets/Js/popper.min.js"></script>
+            <script type="text/javascript" src="Assets/Js/bootstrap.min.js"></script>
+            <script type="text/javascript" src="Assets/Js/mdb.min.js"></script>
+            <script type="text/javascript" src="Assets/Js/s.js"></script>
+            <script type="text/javascript">
+      
+    </script>
+    </body>  
+</html>

@@ -1,0 +1,81 @@
+<!doctype html>
+<!--[if IE 8]><html class="ie8 lt-ie10"><![endif]-->
+<!--[if IE 9]><html class="ie9 lt-ie10"><![endif]-->
+<!--[if gt IE 9]><!--><html lang="fr"><!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="cleartype" content="on">
+    <meta name="MobileOptimized" content="320">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <link rel="icon" type="image/png" href="assets/images/icon/logo.png" />
+        <link href="Assets/Css/fontawesome-all.css" rel="stylesheet">
+        <link href="Assets/Css/bootstrap.min.css" rel="stylesheet">
+        <link href="Assets/Css/mdb.min.css" rel="stylesheet">
+        <link href="Assets/Css/jquery.notify.css" rel="stylesheet">
+    <link rel="stylesheet" href="Assets/Css/test.css">
+    <link rel="stylesheet" href="Assets/Css/index.css">
+    <style>
+      .slideout-menu { left: auto; }
+      .btn-hamburger { left: auto; right: 12px;}
+      .box { height: 1500px; }
+    </style>
+    <title>{{ user.pseudo|capitalize }}</title>
+  </head>
+  <body>
+
+    <nav id="menu" class="menu">
+      <a href="/profil">
+        <header class="menu-header">
+          <img src="Assets/images//Profil/{{ random(['01.jpg', '1.jpg', '2.jpg', '3.jpg', '5.png', '6.jpg', '6.png', '23.png', '32.jpg', '35.png', '33.png', '51.png', '56.jpg', '62.png', '3.jpg', '77.png', '86.png']) }}" alt="img">
+        </header>
+      </a>
+
+      <section class="menu-section">
+        <h3 class="menu-section-title">{{ user.pseudo }}</h3>
+        <ul class="menu-section-list">
+          <li><a href="/Profil">Profil</a></li>
+          <li><a href="/setting">Paramatres</a></li>
+          <li><a href="/Level">Classement</a></li>
+        </ul>
+      </section>
+    </nav>
+
+    <main id="panel" class="panel">
+      <header class="panel-header">
+        <button class="btn-hamburger js-slideout-toggle"></button>
+      </header>
+
+      <section class="box">
+      </section>
+    </main>
+    <script src="/socket.io/socket.io.js"></script>
+            <script type="text/javascript" src="Assets/Js/jquery-3.3.1.min.js"></script>
+            <script type="text/javascript" src="Assets/Js/fontawesome-all.js"></script>
+            <script type="text/javascript" src="Assets/Js/jquery.notify.js"></script>
+            <script type="text/javascript" src="Assets/Js/popper.min.js"></script>
+            <script type="text/javascript" src="Assets/Js/bootstrap.min.js"></script>
+            <script type="text/javascript" src="Assets/Js/mdb.min.js"></script>
+            <script type="text/javascript" src="Assets/Js/s.js"></script>
+    <script src="Assets/Js/slideout.min.js"></script>
+    <script>
+      window.onload = function() {
+        var slideout = new Slideout({
+          'panel': document.getElementById('panel'),
+          'menu': document.getElementById('menu'),
+          'side': 'right'
+        });
+
+        document.querySelector('.js-slideout-toggle').addEventListener('click', function() {
+          slideout.toggle();
+        });
+
+        document.querySelector('.menu').addEventListener('click', function(eve) {
+          if (eve.target.nodeName === 'A') { slideout.close(); }
+        });
+      };
+    </script>
+  </body>
+</html>
