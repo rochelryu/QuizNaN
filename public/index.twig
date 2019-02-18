@@ -1,11 +1,23 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Instascan</title>
-    <script type="text/javascript" src="instascan.min.js"></script>
-  </head>
-  <body>
-    
-    
-  </body>
-</html>
+extends layout
+
+block content
+  h1= title
+
+  div.quiz-container
+    h1 Quiz interface
+    .question.box
+      p <span>1.</span> What does CSS stand for?
+      
+    ul.answers
+      li.answer.box
+        p <span>a</span> Computer Style Sheets
+      li.answer.box
+        p <span>b</span> Cascading Style Sheets
+      li.answer.box
+        p <span>c</span> Colorful Style Sheets
+      li.answer.box
+        p <span>d</span> Creative Style Sheets
+        
+    button.box Send
+      span &#x203A;
+  
