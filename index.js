@@ -78,12 +78,16 @@ mysql.createConnection({
             const personC = await User.userExist(user, password);
            if (!isErr(personC)){
                req.session.nanSecondeGen = personC;
-               let ti = new Date().getTime()
+               if(req.session.nanSecondeGen.level === 0){
+                res.redirect('/Accueil');
+               }
+               else res.redirect('/Admin');
+               /*let ti = new Date().getTime()
                const attr = req.session.nanSecondeGen.email + ':' + req.session.nanSecondeGen.pass
                ti = ti+ '-' + req.session.nanSecondeGen.emailcrypt + '.png'
                let qr_svg = qr.image(attr, {type: 'png'})
-               qr_svg.pipe(fs.createWriteStream(__dirname+'/public/Assets/images/code/'+ ti));
-               res.redirect('/Accueil');
+               qr_svg.pipe(fs.createWriteStream(__dirname+'/public/Assets/images/code/'+ ti));*/
+               
            }
            else{
                res.render(`${__dirname}/public/login.twig`, { error: 'Identification Echoué. Veuillez verifier vos cordonnées ou Inscrivez-vous' })
@@ -105,11 +109,11 @@ mysql.createConnection({
             const personC = await User.userExist(user, pass);
            if (!isErr(personC)){
                req.session.nanSecondeGen = personC;
-               let ti = new Date().getTime()
+               /*let ti = new Date().getTime()
                const attr = req.session.nanSecondeGen.email + ':' + req.session.nanSecondeGen.pass
                ti = ti+ '-' + req.session.nanSecondeGen.emailcrypt + '.png'
                let qr_svg = qr.image(attr, {type: 'png'})
-               qr_svg.pipe(fs.createWriteStream(__dirname+'/public/Assets/images/code/'+ ti));
+               qr_svg.pipe(fs.createWriteStream(__dirname+'/public/Assets/images/code/'+ ti));*/
                res.redirect('/Accueil');
            }
            else{
@@ -162,6 +166,92 @@ mysql.createConnection({
         }
     });
     app.get('/Accueil', async (req, res)=>{
+        if(req.session.nanSecondeGen){
+            let info = {}
+            /*let ll = req.session.ngboador.lieu.split(',');
+            let NumberPublication = await User.getAllPublicationUsers(0,9);
+            let sugl = await User.getAllSuggest(ll[0], req.session.ngboador.id, 0, 3);
+            let sugl2 = await User.getAllSuggest(ll[0], req.session.ngboador.id, 3, 3);
+            /*for(let i = 0; i< 6; i++){
+                const ele = Math.floor(Math.random() * Math.floor(sugTotal.length));
+                console.log(sugTotal[ele - 1]);
+                (sugl.length < 3) ? sugl.push(sugTotal[ele - 1]) : sugl2.push(sugTotal[ele - 1]);
+            }*/
+            /*for(let i in NumberPublication){
+                const NombreLike = await User.getNumberLike(NumberPublication[i].id);
+                const NombreDoute = await User.getNumberDoute(NumberPublication[i].id);
+                const NombreComment = await User.getNumberComment(NumberPublication[i].id);
+                NumberPublication[i].comment = await User.getAllCommentByPublicationId(NumberPublication[i].id);
+                const sad = await User.getInfoUserLike(req.session.ngboador.emailcrypt, NumberPublication[i].id);
+                const doute = await User.getInfoUserDoute(req.session.ngboador.emailcrypt, NumberPublication[i].id);
+                NumberPublication[i].isLike = sad.isLike;
+                NumberPublication[i].nombreFolie = NombreLike.NumberLike;
+                NumberPublication[i].nombreLike = NombreDoute.NumberDoute;
+                NumberPublication[i].nombreComment = NombreComment.NumberComment;
+                NumberPublication[i].isDoute = doute.isDoute;
+                continue;
+            }
+            info.nom = req.session.nanSecondeGen.pseudo;
+            info.crypt = sugl;
+            info.sug2 = sugl2;
+            let totalSearch = await User.getAllUserLocal(ll[0], req.session.ngboador.id);
+            const userSearch = JSON.stringify(totalSearch);
+            fs.writeFile(__dirname + "/public/ngboado/part/usersSearch.txt", userSearch, "UTF-8", (err, file) => {
+                if (err) {
+                    console.log(err);
+                }
+                else {
+                    console.log("user ready to Search");
+                }
+            });*/
+            res.render(`${__dirname}/public/inde.twig`, {user: req.session.nanSecondeGen, info:info});
+        }
+        else res.redirect('/login')
+    });
+    app.get('/beg', async (req, res)=>{
+        if(req.session.nanSecondeGen){
+            let info = {}
+            /*let ll = req.session.ngboador.lieu.split(',');
+            let NumberPublication = await User.getAllPublicationUsers(0,9);
+            let sugl = await User.getAllSuggest(ll[0], req.session.ngboador.id, 0, 3);
+            let sugl2 = await User.getAllSuggest(ll[0], req.session.ngboador.id, 3, 3);
+            /*for(let i = 0; i< 6; i++){
+                const ele = Math.floor(Math.random() * Math.floor(sugTotal.length));
+                console.log(sugTotal[ele - 1]);
+                (sugl.length < 3) ? sugl.push(sugTotal[ele - 1]) : sugl2.push(sugTotal[ele - 1]);
+            }*/
+            /*for(let i in NumberPublication){
+                const NombreLike = await User.getNumberLike(NumberPublication[i].id);
+                const NombreDoute = await User.getNumberDoute(NumberPublication[i].id);
+                const NombreComment = await User.getNumberComment(NumberPublication[i].id);
+                NumberPublication[i].comment = await User.getAllCommentByPublicationId(NumberPublication[i].id);
+                const sad = await User.getInfoUserLike(req.session.ngboador.emailcrypt, NumberPublication[i].id);
+                const doute = await User.getInfoUserDoute(req.session.ngboador.emailcrypt, NumberPublication[i].id);
+                NumberPublication[i].isLike = sad.isLike;
+                NumberPublication[i].nombreFolie = NombreLike.NumberLike;
+                NumberPublication[i].nombreLike = NombreDoute.NumberDoute;
+                NumberPublication[i].nombreComment = NombreComment.NumberComment;
+                NumberPublication[i].isDoute = doute.isDoute;
+                continue;
+            }
+            info.nom = req.session.nanSecondeGen.pseudo;
+            info.crypt = sugl;
+            info.sug2 = sugl2;
+            let totalSearch = await User.getAllUserLocal(ll[0], req.session.ngboador.id);
+            const userSearch = JSON.stringify(totalSearch);
+            fs.writeFile(__dirname + "/public/ngboado/part/usersSearch.txt", userSearch, "UTF-8", (err, file) => {
+                if (err) {
+                    console.log(err);
+                }
+                else {
+                    console.log("user ready to Search");
+                }
+            });*/
+            res.render(`${__dirname}/public/index.twig`, {user: req.session.nanSecondeGen, info:info});
+        }
+        else res.redirect('/login')
+    });
+    app.get('/Admin', async (req, res)=>{
         if(req.session.nanSecondeGen){
             let info = {}
             /*let ll = req.session.ngboador.lieu.split(',');

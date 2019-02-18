@@ -1,23 +1,59 @@
-extends layout
-
-block content
-  h1= title
-
-  div.quiz-container
-    h1 Quiz interface
-    .question.box
-      p <span>1.</span> What does CSS stand for?
+<!doctype html>
+<!--[if IE 8]><html class="ie8 lt-ie10"><![endif]-->
+<!--[if IE 9]><html class="ie9 lt-ie10"><![endif]-->
+<!--[if gt IE 9]><!--><html lang="fr"><!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="cleartype" content="on">
+    <meta name="MobileOptimized" content="320">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <link rel="icon" type="image/png" href="assets/images/icon/logo.png" />
+        <link href="Assets/Css/fontawesome-all.css" rel="stylesheet">
+        <link href="Assets/Css/bootstrap.min.css" rel="stylesheet">
+        <link href="Assets/Css/mdb.min.css" rel="stylesheet">
+        <link href="Assets/Css/jquery.notify.css" rel="stylesheet">
+    <link rel="stylesheet" href="Assets/Css/style.css">
+    <title>{{ user.pseudo|capitalize }}</title>
+    <script src="Assets/Js/instascan.min.js"></script>
+  </head>
+  <body>
+  <div class="quiz-container">
+    <h1> Quiz interface</h1>
+    <div class="question box">
+      <p> <span>1.</span> What does CSS stand for?</p>
+    </div>
       
-    ul.answers
-      li.answer.box
-        p <span>a</span> Computer Style Sheets
-      li.answer.box
-        p <span>b</span> Cascading Style Sheets
-      li.answer.box
-        p <span>c</span> Colorful Style Sheets
-      li.answer.box
-        p <span>d</span> Creative Style Sheets
-        
-    button.box Send
-      span &#x203A;
+    <ul class="answers">
+      <li class="answer box">
+        <p> <span>a</span> Computer Style Sheets </p>
+        </li>
+      <li class="answer box">
+        <p> <span>b</span> Cascading Style Sheets</p>
+        </li>
+      <li class="answer box">
+        <p> <span>b</span> Cascading Style Sheets</p>
+        </li>
+      <li class="answer box">
+        <p> <span>b</span> Cascading Style Sheets</p>
+        </li>
+    <ul>
+    <button class="box Send">
+      <span> &#x203A;</span>
+    </button>
+  </div>
+  <script src="/socket.io/socket.io.js"></script>
+            <script type="text/javascript" src="Assets/Js/jquery-3.3.1.min.js"></script>
+            <script type="text/javascript" src="Assets/Js/fontawesome-all.js"></script>
+            <script type="text/javascript" src="Assets/Js/jquery.notify.js"></script>
+            <script type="text/javascript" src="Assets/Js/popper.min.js"></script>
+            <script type="text/javascript" src="Assets/Js/bootstrap.min.js"></script>
+            <script type="text/javascript" src="Assets/Js/mdb.min.js"></script>
+            <script type="text/javascript" src="Assets/Js/s.js"></script>
+            <script type="text/javascript">
+    </script>
+    </body>  
+</html>
   
