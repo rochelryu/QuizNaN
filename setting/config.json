@@ -3,7 +3,7 @@
   "port": "8080",
   "db": {
     "host": "localhost",
-    "database": "quizNanLevel2",
+    "database": "quiznan",
     "user": "root",
     "password": "mamanPAPA225R#"
   },
