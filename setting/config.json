@@ -1,0 +1,24 @@
+{
+  "rootApi": "/",
+  "port": "8080",
+  "db": {
+    "host": "localhost",
+    "database": "quizNanLevel2",
+    "user": "root",
+    "password": "mamanPAPA225R#"
+  },
+  "email":{
+    "user" : "",
+    "pass" : ""
+  },
+  "session":{
+    "secret" : "kjjvejevoeve5v3e45pzpzvqmlsq53315789kjjvejevoeve5v3e45pzpzvqmlsq53315789",
+    "resave": false,
+    "saveUninitialized": false
+  },
+  "token": "808960c38a6951d68700d8dfa0c0a42b",
+  "sslOptions" :{
+    "key": "fs.readFileSync('key.pem')",
+    "cert": "fs.readFileSync('cert.pem')"
+  }
+}
