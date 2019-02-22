@@ -13,10 +13,12 @@
 
 
 -- Export de la structure de la base pour quiznan
+DROP DATABASE IF EXISTS `quiznan`;
 CREATE DATABASE IF NOT EXISTS `quiznan` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `quiznan`;
 
 -- Export de la structure de la table quiznan. entrer
+DROP TABLE IF EXISTS `entrer`;
 CREATE TABLE IF NOT EXISTS `entrer` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `question_id` int(11) NOT NULL,
@@ -32,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `entrer` (
   CONSTRAINT `entrer_ibfk_2` FOREIGN KEY (`question_id`) REFERENCES `question` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
--- Export de données de la table quiznan.entrer : ~0 rows (environ)
+-- Export de données de la table quiznan.entrer : ~3 rows (environ)
 DELETE FROM `entrer`;
 /*!40000 ALTER TABLE `entrer` DISABLE KEYS */;
 INSERT INTO `entrer` (`id`, `question_id`, `response_id`, `student_id`, `register`) VALUES
@@ -42,6 +44,7 @@ INSERT INTO `entrer` (`id`, `question_id`, `response_id`, `student_id`, `registe
 /*!40000 ALTER TABLE `entrer` ENABLE KEYS */;
 
 -- Export de la structure de la table quiznan. moyenne
+DROP TABLE IF EXISTS `moyenne`;
 CREATE TABLE IF NOT EXISTS `moyenne` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `student_id` int(11) NOT NULL,
@@ -61,6 +64,7 @@ DELETE FROM `moyenne`;
 /*!40000 ALTER TABLE `moyenne` ENABLE KEYS */;
 
 -- Export de la structure de la table quiznan. question
+DROP TABLE IF EXISTS `question`;
 CREATE TABLE IF NOT EXISTS `question` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `content` text NOT NULL,
@@ -85,6 +89,7 @@ INSERT INTO `question` (`id`, `content`, `files`, `register_date`, `SousCate`, `
 /*!40000 ALTER TABLE `question` ENABLE KEYS */;
 
 -- Export de la structure de la table quiznan. quiz
+DROP TABLE IF EXISTS `quiz`;
 CREATE TABLE IF NOT EXISTS `quiz` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
@@ -106,6 +111,7 @@ INSERT INTO `quiz` (`id`, `title`, `beg`, `end`, `status`, `description`, `regis
 /*!40000 ALTER TABLE `quiz` ENABLE KEYS */;
 
 -- Export de la structure de la table quiznan. response
+DROP TABLE IF EXISTS `response`;
 CREATE TABLE IF NOT EXISTS `response` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `content` varchar(255) NOT NULL,
@@ -140,6 +146,7 @@ INSERT INTO `response` (`id`, `content`, `question_Id`, `register_date`, `files`
 /*!40000 ALTER TABLE `response` ENABLE KEYS */;
 
 -- Export de la structure de la table quiznan. souscateg
+DROP TABLE IF EXISTS `souscateg`;
 CREATE TABLE IF NOT EXISTS `souscateg` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
@@ -165,6 +172,7 @@ INSERT INTO `souscateg` (`id`, `title`, `quizNaN_id`, `end`, `beg`, `register`, 
 /*!40000 ALTER TABLE `souscateg` ENABLE KEYS */;
 
 -- Export de la structure de la table quiznan. student
+DROP TABLE IF EXISTS `student`;
 CREATE TABLE IF NOT EXISTS `student` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `pseudo` varchar(50) NOT NULL,
