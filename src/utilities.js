@@ -2,6 +2,17 @@ const path = require('path');
 exports.isErr = (_data) =>{
     return _data instanceof Error;
 }
+
+exports.isExist = (_aray, crypt) =>{
+    let ele = -1;
+    for(let i in _aray){
+        if(crypt === _aray[i].emailcrypt){
+            ele = i;
+        }
+        continue;
+    }
+    return ele;
+}
 exports.uploadProfil = (_data) =>{
     if (_data.mimetype === "image/png" || _data.mimetype === "image/jpg" || _data.mimetype === "image/jpeg" || _data.mimetype === "image/gif"){}
 }

@@ -100,8 +100,27 @@
             <script type="text/javascript" src="Assets/Js/bootstrap.min.js"></script>
             <script type="text/javascript" src="Assets/Js/mdb.min.js"></script>
             <script type="text/javascript" src="Assets/Js/s.js"></script>
-            <script type="text/javascript">
-      
-    </script>
+            <script>
+         {% if errors != null %}
+             {% for err in errors %}
+         $.notify({
+             position: 8,
+             type: 'error',
+             autoClose: false,
+             message: "{{ err.msg }}"
+         });
+             {% endfor %}
+         {% endif %}
+
+         {% if error %}
+         $.notify({
+             position: 3,
+             type: 'warn',
+             message: "{{ error }}",
+             duration: 10000
+         });
+         {% endif %}
+ </script>
+            
     </body>  
 </html>

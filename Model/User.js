@@ -36,9 +36,20 @@ let User = class {
         })
     }
 
-    static getAllSuggest(lieu,user_id, beg, end){
+    static getQuiZOnline(){
         return new Promise((next) =>{
-            db.query("SELECT CONCAT(name, ' ', firstname) nom, profession, profil, emailcrypt FROM user WHERE lieu REGEXP ? AND id != ? LIMIT ?,?", [lieu, parseInt(user_id, 10), parseInt(beg, 10), parseInt(end, 10)])
+            db.query("SELECT * FROM quiz WHERE status = 1")
+                .then((result) =>{
+                    next(result[0]);
+                }).catch((error) => {
+                next(error);
+            });
+        })
+    }
+
+    static getSousCategorieBy(quizId){
+        return new Promise((next) =>{
+            db.query("SELECT * FROM souscateg WHERE quizNaN_id = ? ORDER BY end ASC", [parseInt(quizId, 10)])
                 .then((result) =>{
                     next(result);
                 }).catch((error) => {
@@ -47,9 +58,9 @@ let User = class {
         })
     }
 
-    static getAllUserLocal(lieu,user_id){
+    static getQuestionBySousCategorieId(cateID){
         return new Promise((next) =>{
-            db.query("SELECT CONCAT(name, ' ', firstname) nom, profil, emailcrypt FROM user WHERE lieu REGEXP ? AND id != ?", [lieu, parseInt(user_id, 10)])
+            db.query("SELECT * FROM question WHERE SousCate = ?", [parseInt(cateID, 10)])
                 .then((result) =>{
                     next(result);
                 }).catch((error) => {
@@ -58,20 +69,57 @@ let User = class {
         })
     }
 
-    static getUserFollowing(emailcrypt, user_id){
+    static getResponseByQuestionId(QuestId){
+        return new Promise((next) =>{
+            db.query("SELECT id,content,files,crypt FROM response WHERE question_Id = ?", [parseInt(QuestId, 10)])
+                .then((result) =>{
+                    next(result);
+                }).catch((error) => {
+                next(error);
+            });
+        })
+    }
+
+    static getResponseIDQuestionId(QuestId){
+        return new Promise((next) =>{
+            db.query("SELECT id FROM response WHERE crypt = ?", [QuestId])
+                .then((result) =>{
+                    next(result[0]);
+                }).catch((error) => {
+                next(error);
+            });
+        })
+    }
+
+    static getQuestionID(QuestCrypt){
+        return new Promise((next) =>{
+            db.query("SELECT id FROM question WHERE crypt = ?", [QuestCrypt])
+                .then((result) =>{
+                    next(result);
+                }).catch((error) => {
+                next(error);
+            });
+        })
+    }
+
+    static getStudentID(QuestCrypt){
+        return new Promise((next) =>{
+            db.query("SELECT id FROM student WHERE emailcrypt = ?", [QuestCrypt])
+                .then((result) =>{
+                    next(result[0]);
+                }).catch((error) => {
+                next(error);
+            });
+        })
+    }
+
+
+    static getQuiz(crypt){
         return new Promise((next)=>{
-            db.query("SELECT id FROM user WHERE emailcrypt = ?", [emailcrypt])
+            db.query("SELECT * FROM quiz WHERE encrypt = ?", [crypt])
                 .then((result)=>{
                     if (result[0] != undefined){
-                        console.log('user_id ' + result[0].id)
-                        db.query("SELECT statut_id FROM follow_user WHERE (user_prim_id = ? AND user_sec_id = ?) OR (user_prim_id = ? AND user_sec_id = ?)", [parseInt(result[0].id, 10), parseInt(user_id, 10), parseInt(user_id, 10), parseInt(result[0].id, 10)])
-                            .then((results)=>{
-                                console.log("resultats est ! " + results[0]);
-                                next(results[0]);
-                            })
-                            .catch((err)=>{
-                                next(err);
-                            })
+                        next(result[0]);
                     }
                     else{
                         next(new Error('Aucun user TRouvé'))
@@ -82,31 +130,12 @@ let User = class {
                 })
         })
     }
-    static setUserFollowing(emailcrypt, emailcrypt2){
+    static getSousQuiz(crypt){
         return new Promise((next)=>{
-            db.query("SELECT id FROM user WHERE emailcrypt = ?", [emailcrypt])
+            db.query("SELECT * FROM souscateg WHERE crypt = ?", [crypt])
                 .then((result)=>{
                     if (result[0] != undefined){
-                        const user1 = result[0].id;
-                        db.query("SELECT id FROM user WHERE emailcrypt = ?", [emailcrypt2])
-                            .then((results)=>{
-                                if (results[0] != undefined){
-                                    const user2 = results[0].id;
-                                    db.query("INSERT INTO follow_user (user_prim_id, user_sec_id,statut_id) VALUES (?,?,1)", [parseInt(user1, 10), parseInt(user2, 10)])
-                                        .then((resultss)=>{
-                                            next(resultss);
-                                        })
-                                        .catch((err)=>{
-                                            next(err);
-                                        })
-                                }
-                                else{
-                                    next(new Error('Aucun user TRouvé'))
-                                }
-                            })
-                            .catch((err)=>{
-                                next(err);
-                            })
+                        next(result[0]);
                     }
                     else{
                         next(new Error('Aucun user TRouvé'))
@@ -188,6 +217,70 @@ let User = class {
                 .catch((err)=>{
                     next(err);
                 })
+        })
+    }
+
+    static setEnter(quesId, res_id, student_Id){
+        return new Promise((next)=>{
+            db.query("SELECT * FROM entrer WHERE student_id = ? AND question_id = ?", [parseInt(student_Id, 10), parseInt(quesId, 10)])
+            .then((result)=>{
+                if(result[0] !== undefined){
+                    db.query("UPDATE entrer SET response_id = ?  WHERE student_id = ? AND question_id = ?", [parseInt(res_id, 10), parseInt(student_Id, 10), parseInt(quesId, 10)])
+                    .then((results)=>{
+                        next(results)
+                    }).catch((err)=>{ 
+                        console.log(err)
+                        next(err)})
+                }
+                else{
+                    db.query("INSERT INTO entrer (response_id,student_id,question_id) VALUES (?,?,?)", [parseInt(res_id, 10), parseInt(student_Id, 10), parseInt(quesId, 10)])
+                    .then((resultss)=>{
+                        next(resultss)
+                    }).catch((errs)=>{
+                        console.log(errs)
+                        next(errs)})
+                }
+            }).catch((error)=>{
+                next(error);
+            })
+        })
+    }
+
+
+    static setEnterNull(quesId, student_Id){
+        return new Promise((next)=>{
+            db.query("SELECT * FROM entrer WHERE student_id = ? AND question_id = ?", [parseInt(student_Id, 10), parseInt(quesId, 10)])
+            .then((result)=>{
+                if(result[0] !== undefined){
+                    db.query("UPDATE entrer SET response_id = null  WHERE student_id = ? AND question_id = ?", [parseInt(student_Id, 10), parseInt(quesId, 10)])
+                    .then((results)=>{
+                        next(results)
+                    }).catch((err)=>{ 
+                        console.log(err)
+                        next(err)})
+                }
+                else{
+                    db.query("INSERT INTO entrer (student_id,question_id) VALUES (?,?)", [parseInt(student_Id, 10), parseInt(quesId, 10)])
+                    .then((resultss)=>{
+                        next(resultss)
+                    }).catch((errs)=>{
+                        console.log(errs)
+                        next(errs)})
+                }
+            }).catch((error)=>{
+                next(error);
+            })
+        })
+    }
+
+    static setNote(souscateg, student_Id, note){
+        return new Promise((next)=>{
+            db.query("INSERT INTO moyenne (souscategorie_id, student_id, note) VALUES (?,?,?)", [parseInt(souscateg, 10), parseInt(student_Id, 10), note])
+            .then((result)=>{
+                next(result[0]);
+            }).catch((err)=>{
+                next(err);
+            })
         })
     }
 
@@ -394,16 +487,59 @@ let User = class {
         )
     }
 
-    static getAllPublicationUsers(beg, end){
+    static getBestThreeStudent(sous){
         return new Promise((next) =>{
-            db.query("SELECT publication.id as id, publication.title as title, publication.content_text as content, publication.file1 as file1, publication.file2 as file2, publication.file3 as file3,publication.file4 as file4,publication.file5 as file5,publication.file6 as file6,publication.file7 as file7,publication.file8 as file8,publication.file9 as file9,publication.file10 as file10, publication.file11 as file11, publication.file12 as file12, publication.file13 as file13,publication.file14 as file14,publication.file15 as file15,publication.file16 as file16,publication.file17 as file17,publication.file18 as file18,publication.file19 as file19, publication.register_date as register_date, DAY(publication.register_date) as jour, CONCAT(user.name, ' ', user.firstname) as nom, user.profil as profil, user.emailcrypt as emailcrypt FROM publication LEFT JOIN user ON publication.user_id = user.id ORDER BY id DESC LIMIT ?, ?", [parseInt(beg, 10), parseInt(end, 10)])
+            db.query("SELECT moyenne.note, student.pseudo FROM moyenne LEFT JOIN student ON moyenne.student_id = student.id WHERE moyenne.souscategorie_id = ? ORDER BY moyenne.note DESC LIMIT 3", [parseInt(sous, 10)])
                 .then((result) =>{
-                    for(let i in result){
-                        result[i].content = ent.decode(result[i].content);
-                        continue;
-                    }
                     next(result);
                 }).catch((error) => {
+                next(error);
+            });
+        })
+    }
+
+    static getResponseForComparate(question_Id, student_Id){
+        return new Promise((next) =>{
+            db.query("SELECT response_id FROM entrer WHERE question_id = ? AND student_id = ?", [parseInt(question_Id, 10), parseInt(student_Id, 10)])
+                .then((result) =>{
+                    next(result[0]);
+                }).catch((error) => {
+                    console.log(error)
+                next(error);
+            });
+        })
+    }
+
+    static getVerifNote(sousCate_Id, student_Id){
+        return new Promise((next) =>{
+            db.query("SELECT * FROM moyenne LEFT JOIN souscateg ON moyenne.souscategorie_id = souscateg.id LEFT JOIN student ON moyenne.student_id = student.id   WHERE  moyenne.souscategorie_id = ? AND moyenne.student_id = ?", [parseInt(sousCate_Id, 10), parseInt(student_Id, 10)])
+                .then((result) =>{
+                    if(result[0] !== undefined){
+                        next(result[0]);
+                    }
+                    else{
+                        next(new Error('Aucune Note Attribué'));
+                    }
+                }).catch((error) => {
+                    console.log(error)
+                next(error);
+            });
+        })
+    }
+
+    static getResponseFullComparate(response_id){
+        return new Promise((next) =>{
+            db.query("SELECT id FROM response WHERE id = ? AND ele = 1", [parseInt(response_id, 10)])
+                .then((result) =>{
+                    if(result[0] !== undefined){
+                        next(result[0]);
+                    }
+                    else{
+                        console.log('Mauvaise Reponse')
+                        next(new Error('Mauvaise Reponse'))
+                    }
+                }).catch((error) => {
+                    console.log(error);
                 next(error);
             });
         })
@@ -473,9 +609,9 @@ let User = class {
             });
         });
     }
-    static getNumberLike(publication_id) {
+    static getNumberQuestion(souscategorieID) {
         return new Promise((next) => {
-            db.query("SELECT COUNT(id) as NumberLike FROM nbre_like WHERE publication_id = ?", [parseInt(publication_id, 10)])
+            db.query("SELECT COUNT(id) as NumberQ FROM question WHERE SousCate = ?", [parseInt(souscategorieID, 10)])
                 .then((result)=>{
                     next(result[0]);
                 }).catch((error) =>next(error));

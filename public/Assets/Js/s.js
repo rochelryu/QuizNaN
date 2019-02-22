@@ -21,12 +21,15 @@ $(document).ready(function(){
     });
 
     $('.ele').on('click', '.showForm', function(){
+      scanner.stop();
       $('.ele').find('#preview').removeClass('animated slideInRight slower').addClass('none')
       $("form").removeClass('none').addClass('animated slideInLeft slower')
       $('.ele').find('.showForm').remove();
-      scanner.stop();
     })
+
+
     $("form").on('click', '.choiceQr', function(){
+      console.log('ICI')
       $("form").addClass('none');
       Instascan.Camera.getCameras().then(function (cameras) {
         if (cameras.length > 0) {
@@ -40,7 +43,7 @@ $(document).ready(function(){
         console.error(e);
       });
     })
-    $("button").click(function() {
+    /*$("button").click(function() {
       if($(".active").length) {
         if($(".active").index() === 1) {
           alert("Well done!");
@@ -50,7 +53,7 @@ $(document).ready(function(){
       } else {
         alert("Please select an answer!");
       }
-    });
+    });*/
     socket.on('vasy',function(data){
       $("#em").val(data.e);
       $("#ps").val(data.k);

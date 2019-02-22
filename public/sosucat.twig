@@ -1,0 +1,169 @@
+<!doctype html>
+<!--[if IE 8]><html class="ie8 lt-ie10"><![endif]-->
+<!--[if IE 9]><html class="ie9 lt-ie10"><![endif]-->
+<!--[if gt IE 9]><!--><html lang="fr"><!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="cleartype" content="on">
+    <meta name="MobileOptimized" content="320">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <link rel="icon" type="image/png" href="../assets/images/icon/logo.png" />
+        <link href="../Assets/Css/fontawesome-all.css" rel="stylesheet">
+        <link href="../Assets/Css/bootstrap.min.css" rel="stylesheet">
+        <link href="../Assets/Css/mdb.min.css" rel="stylesheet">
+        <link href="../Assets/Css/jquery.notify.css" rel="stylesheet">
+    <link rel="stylesheet" href="../Assets/Css/test.css">
+    <link rel="stylesheet" href="../Assets/Css/index.css">
+    <title>{{ user.pseudo|capitalize }}</title>
+    <style>
+      .slideout-menu { left: auto; }
+      .btn-hamburger { left: auto; right: 12px;}
+      .box { min-height: 650px; }
+    </style>
+    <script>
+    function horodatage(date) {
+        var post = new Date(date).getTime();
+        var month = new Date(date).getMonth() + 1;
+        var day = date.substring(8,10);
+        var year = new Date(date).getFullYear();
+        var hour = new Date(date).getHours();
+        var min = new Date(date).getMinutes();
+        var atMoment = new Date().getTime();
+        post /= 1000;
+        atMoment /= 1000;
+        var fior = parseInt((post - atMoment), 10);
+        if (fior >= 86400) {
+            if (parseInt((fior/86400), 10) == 1){
+
+                document.write("Prend fin demain, " + hour + "H:"+ min +"min");
+            }
+            else{
+                document.write("Prend fin Le " + day +"-"+ month +"-"+ year +", "+ hour + "H:"+ min +"min");
+            }
+        }
+        else if(fior >= 3600 && fior < 86400){
+            if(parseInt((fior/3600), 10) == 1){
+                document.write("Prend fin dans " + parseInt((fior/3600), 10) + " Hr");
+            }
+            else{
+                document.write("Prend fin dans " + parseInt((fior/3600), 10) + " Hrs");
+            }
+        }
+        else if(fior >= 60 && fior < 3600){
+            if(parseInt((fior/60), 10) == 1)
+                document.write("Prend fin dans " + parseInt((fior/60), 10) + " Min");
+            else
+                document.write("Prend fin dans " + parseInt((fior/60), 10) + " Mins");
+        }
+        else{
+            if (fior <= 0){
+                document.write("Fermé");
+            }
+            else document.write("Prend fin dans  " + fior + " Sec");
+        }
+    }
+    </script>
+  </head>
+  <body>
+
+    <nav id="menu" class="menu">
+      <a href="/beg">
+        <header class="menu-header">
+          <img src="../Assets/images//Profil/{{ random(['1.jpg', '2.jpg', '5.png', '6.jpg','35.png', '33.png', '56.jpg', '25.jpg']) }}" alt="img">
+        </header>
+      </a>
+
+      <section class="menu-section">
+        <h3 class="menu-section-title">{{ user.pseudo }}</h3>
+        <ul class="menu-section-list">
+          <li><a href="/Profil">Profil</a></li>
+          <li><a href="/setting">Paramatres</a></li>
+          <li><a href="/Level">Classement</a></li>
+        </ul>
+      </section>
+    </nav>
+
+    <main id="panel" class="panel" data-ryu-ele="{{ user.emailcrypt }}">
+      <header class="panel-header">
+        <button class="btn-hamburger js-slideout-toggle"></button>
+      </header>
+
+      <div class="container-fluid">
+      <div class="row">
+      {% for item in info.sousCate %}
+        <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 col-xs-12">
+
+         <!-- Card Wider -->
+          <div class="card card-cascade wider mt-2 mb-3">
+    
+            <!-- Card image -->
+            <div class="view view-cascade overlay">
+              <img  class="card-img-top" src="../Assets/images/1.JPG" alt="Card image cap">
+              <!--a href="#!" class="btn QuizNumber"><i class="fa fa-play"></i/</a-->
+              <a class="trueEnter" data-ryu="{{item.crypt}}" href="/beg/{{ item.crypt }}">
+                <div class="mask rgba-white-slight"></div>
+              </a>
+            </div>
+    
+            <!-- Card content -->
+            <div class="card-body card-body-cascade text-center">
+    
+              <!-- Title -->
+              <h4 class="card-title"><strong><a class="trueEnter" data-ryu="{{item.crypt}}" href="/beg/{{ item.crypt }}">{{ item.title }}</a></strong></h4>
+              <!-- Subtitle -->
+              <h5 class="blue-text pb-2"><strong><script>horodatage("{{ item.end }}")</script></strong></h5>
+              <!-- Text -->
+              <p class="card-text">
+              {{ item.num }} Questions pour {{ item.times}} Minutes soit {{ item.timeQestion}} secondes par Questions. (Si le temps d'une question est ecoulé on passe à la seconde question. Une question mal repondue vaut une pénalité)<br>
+              {{ item.moyen }}% pour valider, bonne chance à vous.
+              </p>
+    
+             <ul class="aucune">
+             {% for it in item.best %}
+               <li>
+              <a class="px-2 fa-lg li-ic"><i class="fa fa-user"></i> {{ it.pseudo }}</a> 
+             </li>
+             {% endfor %}
+             </ul>
+    
+            </div>
+    
+          </div>
+          <!-- Card Wider -->
+            </div>
+            {% endfor %}
+      <div>
+      
+      </div>
+    </main>
+    <script src="/socket.io/socket.io.js"></script>
+      <script type="text/javascript" src="../Assets/Js/jquery-3.3.1.min.js"></script>
+      <script type="text/javascript" src="../Assets/Js/fontawesome-all.js"></script>
+      <script type="text/javascript" src="../Assets/Js/jquery.notify.js"></script>
+      <script type="text/javascript" src="../Assets/Js/popper.min.js"></script>
+      <script type="text/javascript" src="../Assets/Js/bootstrap.min.js"></script>
+      <script type="text/javascript" src="../Assets/Js/mdb.min.js"></script>
+      <script type="text/javascript" src="../Assets/Js/s.js"></script>
+    <script src="../Assets/Js/slideout.min.js"></script>
+    <script>
+      window.onload = function() {
+        var slideout = new Slideout({
+          'panel': document.getElementById('panel'),
+          'menu': document.getElementById('menu'),
+          'side': 'right'
+        });
+
+        document.querySelector('.js-slideout-toggle').addEventListener('click', function() {
+          slideout.toggle();
+        });
+
+        document.querySelector('.menu').addEventListener('click', function(eve) {
+          if (eve.target.nodeName === 'A') { slideout.close(); }
+        });
+      };
+    </script>
+  </body>
+</html>

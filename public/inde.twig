@@ -17,16 +17,19 @@
         <link href="Assets/Css/jquery.notify.css" rel="stylesheet">
     <link rel="stylesheet" href="Assets/Css/test.css">
     <link rel="stylesheet" href="Assets/Css/index.css">
-    <link rel="stylesheet" href="Assets/Css/style.css">
-    <script src="Assets/Js/instascan.min.js"></script>
     <title>{{ user.pseudo|capitalize }}</title>
+    <style>
+      .slideout-menu { left: auto; }
+      .btn-hamburger { left: auto; right: 12px;}
+      .box { min-height: 650px; }
+    </style>
   </head>
   <body>
 
     <nav id="menu" class="menu">
       <a href="/beg">
         <header class="menu-header">
-          <img src="Assets/images//Profil/{{ random(['01.jpg', '1.jpg', '2.jpg', '3.jpg', '5.png', '6.jpg', '6.png', '23.png', '32.jpg', '35.png', '33.png', '51.png', '56.jpg', '62.png', '3.jpg', '77.png', '86.png']) }}" alt="img">
+          <img src="Assets/images//Profil/{{ random(['1.jpg', '2.jpg', '5.png', '6.jpg','35.png', '33.png', '56.jpg', '25.jpg']) }}" alt="img">
         </header>
       </a>
 
@@ -46,137 +49,35 @@
       </header>
 
       <section class="box">
-      <div class="container-fluid">
-      <div class="single-w3l py-5">
-        <div class="container py-xl-5 py-lg-3">
-            <div class="title-section pb-4">
-                <h3 class="main-title-agile">Quiz {{ info.quizNam }}</h3>
-                <div class="title-line">
-                </div>
-            </div>
-            <div class="row inner_sec_info pt-md-4">
-                <!-- left side -->
-                <div-- class="col-lg-8 single-left">
-                    <div class="single-left1">
-                        <img src="Assets/images/fs.jpg" alt=" " class="img-fluid" />
-                        <ul class="courses_list my-3">
-                            <li> 02 Mars 2018</li>
-                        </ul>
-                        <h5 class="card-title">
-                            <a href="single.html" class="text-dark">Quiz</a>
-                        </h5>
-                        <p>{{ info.describe }}</p>
-                    </div>
-                    <!--div class="admin p-4 my-4">
-                        <p>
-                            <i class="fas fa-quote-left mr-2"></i>nibh eu consequat magna ipsum ac ex. Nulla iaculis
-                            tincidunt elit, tortor luctus sit amet.
-                            Morbi in porta dolor. Morbi eget dui elit. consequat magna ipsum ac ex, Nulla iaculis
-                            consequat
-                            magna ipsum ac ex Nulla iaculis.
-                            <i class="fas fa-quote-right ml-2"></i>
-                        </p>
-                        <a href="#" class="mt-3 font-weight-bold text-right blockquote-footer">James Doe</a>
-                    </div-->
-                </div>
-                <!-- //left side -->
-                <!-- right side -->
-                <div class="col-lg-4 event-right mt-lg-0 mt-sm-5 mt-4">
-                    <div class="event-right1">
-                        <div class="categories my-4 p-4 border">
-                            <h3 class="courses-title ">SOUS CATEGORIES</h3>
-                            <ul>
-                            {% for souscat in info.cate %}
-                                <li class="mt-3">
-                                    <i class="fas fa-check mr-2"></i>
-                                    <a href="#">{{ souscat.title }}</a>
-                                </li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                        <div class="posts p-4 border">
-                            <h3 class="courses-title ">Our Events</h3>
-                            <div class="posts-grids">
-                                <div class="row posts-grid mt-4">
-                                    <div class="col-lg-4 col-md-3 col-4 posts-grid-left pr-0">
-                                        <a href="single.html">
-                                            <img src="Assets/images/" alt=" " class="img-fluid" />
-                                        </a>
-                                    </div>
-                                    <div class="col-lg-8 col-md-7 col-8 posts-grid-right mt-lg-0 mt-md-5 mt-sm-4">
-                                        <h4>
-                                            <a href="single.html" class="text-dark">Sed ut perspiciatis unde omni</a>
-                                        </h4>
-                                        <ul class="wthree_courses_events_list mt-2">
-                                            <li class="mr-2 text-dark">
-                                                <i class="fa fa-calendar mr-2" aria-hidden="true"></i>15/05/18</li>
-                                            <li>
-                                                <i class="fa fa-user" aria-hidden="true"></i>
-                                                <a href="single.html" class="text-dark ml-2">Admin</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="row posts-grid mt-4">
-                                    <div class="col-lg-4 col-md-3 col-4 posts-grid-left pr-0">
-                                        <a href="single.html">
-                                            <img src="images/g2.jpg" alt=" " class="img-fluid" />
-                                        </a>
-                                    </div>
-                                    <div class="col-lg-8 col-md-7 col-8 posts-grid-right mt-lg-0 mt-md-5 mt-sm-4">
-                                        <h4>
-                                            <a href="single.html" class="text-dark">Sed ut perspiciatis unde omni</a>
-                                        </h4>
-                                        <ul class="wthree_courses_events_list mt-2">
-                                            <li class="mr-2 text-dark">
-                                                <i class="fa fa-calendar mr-2" aria-hidden="true"></i>23/05/18</li>
-                                            <li>
-                                                <i class="fa fa-user" aria-hidden="true"></i>
-                                                <a href="single.html" class="text-dark ml-2">Admin</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="row posts-grid mt-4">
-                                    <div class="col-lg-4 col-md-3 col-4 posts-grid-left pr-0">
-                                        <a href="single.html">
-                                            <img src="images/g3.jpg" alt=" " class="img-fluid" />
-                                        </a>
-                                    </div>
-                                    <div class="col-lg-8 col-md-7 col-8 posts-grid-right mt-lg-0 mt-md-5 mt-sm-4">
-                                        <h4>
-                                            <a href="single.html" class="text-dark">Sed ut perspiciatis unde omni</a>
-                                        </h4>
-                                        <ul class="wthree_courses_events_list mt-2">
-                                            <li class="mr-2 text-dark">
-                                                <i class="fa fa-calendar mr-2" aria-hidden="true"></i>13/06/18</li>
-                                            <li>
-                                                <i class="fa fa-user" aria-hidden="true"></i>
-                                                <a href="single.html" class="text-dark ml-2">Admin</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-              
-                    </div>
-                </div>
-                <!-- //right side -->
-            </div>
+        <div class="content">
+          <div class="titles">
+          <ul class="EleQuiz">
+          <li>
+            <h2>
+            {{ info.title }}
+            <h2>
+          </li>
+
+          <li class="descDate">
+            {{ info.end|date('d/m/Y H:i') }}
+          </li>
+          </ul>
+          </div>
+          <div class="enter">
+          <a href="/ownL/{{ info.crypt }}" class="btn">Entrer
+          </a>
+          </div>
         </div>
-    </div>
-      </div>
       </section>
     </main>
     <script src="/socket.io/socket.io.js"></script>
-            <script type="text/javascript" src="Assets/Js/jquery-3.3.1.min.js"></script>
-            <script type="text/javascript" src="Assets/Js/fontawesome-all.js"></script>
-            <script type="text/javascript" src="Assets/Js/jquery.notify.js"></script>
-            <script type="text/javascript" src="Assets/Js/popper.min.js"></script>
-            <script type="text/javascript" src="Assets/Js/bootstrap.min.js"></script>
-            <script type="text/javascript" src="Assets/Js/mdb.min.js"></script>
-            <script type="text/javascript" src="Assets/Js/s.js"></script>
+      <script type="text/javascript" src="Assets/Js/jquery-3.3.1.min.js"></script>
+      <script type="text/javascript" src="Assets/Js/fontawesome-all.js"></script>
+      <script type="text/javascript" src="Assets/Js/jquery.notify.js"></script>
+      <script type="text/javascript" src="Assets/Js/popper.min.js"></script>
+      <script type="text/javascript" src="Assets/Js/bootstrap.min.js"></script>
+      <script type="text/javascript" src="Assets/Js/mdb.min.js"></script>
+      <script type="text/javascript" src="Assets/Js/s.js"></script>
     <script src="Assets/Js/slideout.min.js"></script>
     <script>
       window.onload = function() {

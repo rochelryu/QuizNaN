@@ -2,7 +2,6 @@ html, body{
 	font-family: 'Roboto', sans-serif;
 	font-size: 100%;
   overflow-x: hidden;
-  min-height: 100%;
 	background: url(../images/bg.jpg) no-repeat 0px 0px;
 	background-size:cover;
 }
@@ -60,7 +59,7 @@ input.ggg{
       margin: 100px 100px 10px;
   }
   .ele h2 {
-	color: #8b5c7e;
+	color: #777fff;
     font-size: 29px;
     letter-spacing: 2px;
     text-transform: uppercase;
@@ -99,7 +98,7 @@ input.ggg{
   -ms-transition:0.5s all;
   }
   .ele a:hover{
-  color:#f0bcb4;
+  color:#ad95f9;
   transition:0.5s all;
   -webkit-transition:0.5s all;
   -o-transition:0.5s all;
@@ -111,7 +110,7 @@ input.ggg{
     font-size: 18px;
     text-transform: uppercase;
     letter-spacing: 2px;
-    background: #f0bcb4;
+    background: #ad95f9;
     color: white;
     border: none;
     outline: none;
@@ -125,7 +124,7 @@ input.ggg{
     -ms-transition: 0.5s all;
   }
   .ele input[type="submit"]:hover {
-  background:#8b5c7e;
+  background:#777fff;
   transition:0.5s all;
   -webkit-transition:0.5s all;
   -o-transition:0.5s all;
@@ -133,7 +132,7 @@ input.ggg{
   -ms-transition:0.5s all;
   }
   .ele p a {
-    color: #f0bcb4;
+    color: #ad95f9;
     padding: 10px;
   }
   .ele p a:hover {

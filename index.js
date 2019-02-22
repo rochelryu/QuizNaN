@@ -4,7 +4,7 @@ const qr = require('qr-image');
 const multer = require('multer');
 let Jimp = require('jimp');
 const twig = require('twig');
-const {isErr, strinfToDate} = require('./src/utilities');
+const {isErr, strinfToDate, isExist} = require('./src/utilities');
 const fs = require('fs');
 const config = require('./setting/config')
 let bodyParser = require('body-parser');
@@ -28,6 +28,7 @@ mysql.createConnection({
     let io = require('socket.io')(https);
     const User = require('./Model/User')(db, config);
 
+    let compo = new Array();
 
     // utilisation du middlewar
     app.use(expressValidator());
@@ -43,11 +44,51 @@ mysql.createConnection({
     app.use(morgan);
 
     app.get('/', async (req, res) =>{
-        if(req.session.ngboador){
+        if(req.session.nanSecondeGen){
             res.redirect('/Accueil');
         }
         res.redirect('/login')
     });
+
+
+    app.get('/result', async (req, res) => {
+        if(req.session.nanSecondeGen !== undefined){
+            const moy = await User.getVerifNote(compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].sousQuiz, req.session.nanSecondeGen.id);
+            if(!isErr(moy)){
+                console.log('Deja noté');
+                res.send(moy);
+            }
+            else{
+                console.log('pas encore noté');
+                let erreur = 0;
+                let note = 0;
+            for(let i in compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].Ques){
+                const respo = await User.getResponseForComparate(compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].Ques[i].id, req.session.nanSecondeGen.id)
+                const tcheck = await User.getResponseFullComparate(respo.response_id);
+                if(!isErr(tcheck) && respo.response_id !== null){
+                    note += (100 / compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].niveauTotal);
+                }
+                else if(isErr(tcheck) && respo.response_id !== null){
+                    erreur = erreur + 1;
+                    if(note !== 0){
+                        note -= (100 / compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].niveauTotal);
+                    }
+                }
+                else{
+                    note = note;
+                }
+                continue;
+            }
+            console.log('ma note est : ' + note);
+            const intent = await User.setNote(compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].sousQuiz, req.session.nanSecondeGen.id, note);
+            res.send(intent);
+            }
+        }
+        else{
+            res.redirect('/login');
+        }
+    })
+
     app.get('/login', async (req, res) =>{
         if(req.session.nanSecondeGen){
             res.redirect('/Accueil');
@@ -80,8 +121,15 @@ mysql.createConnection({
            let password = crypto.createHmac('sha256', pass).update('I love cupcakes').digest('hex');
             const personC = await User.userExist(user, password);
            if (!isErr(personC)){
+               if(isExist(compo, personC.emailcrypt) !== -1){
+                res.render(`${__dirname}/public/login.twig`, { error: 'Vous êtes déjà connecté Sur un autre Appareil pensez à vous deconnecter là bas.' })
+            }
                req.session.nanSecondeGen = personC;
+               let users = {};
+               users.emailcrypt = req.session.nanSecondeGen.emailcrypt;
+               compo.push(users);
                if(req.session.nanSecondeGen.level === 0){
+                   console.log(JSON.stringify(compo))
                 res.redirect('/Accueil');
                }
                else res.redirect('/Admin');
@@ -168,6 +216,76 @@ mysql.createConnection({
             }
         }
     });
+
+    app.get('/ownL/:crypt', async (req, res)=>{
+        if(req.session.nanSecondeGen){
+            let crypt = req.params.crypt.replace(/<script>/g,"");
+            crypt = ent.encode(crypt);
+            const Quiz = await User.getQuiz(crypt);
+            if(!isErr(Quiz)){
+            compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].quiz = Quiz.id;
+            let sousCate = await User.getSousCategorieBy(Quiz.id);
+            for(let i in sousCate){
+                const num = await User.getNumberQuestion(sousCate[i].id);
+                const tedt = (sousCate[i].times*60) / num.NumberQ;
+                const timeQestion = Math.round(tedt);
+                const best = await User.getBestThreeStudent(sousCate[i].id);
+                sousCate[i].num = num.NumberQ;
+                sousCate[i].best = best;
+                sousCate[i].timeQestion = timeQestion;
+                continue;
+            }
+            info = {}
+            info.sousCate = sousCate;
+            console.log(isExist(compo, req.session.nanSecondeGen.emailcrypt))
+            res.render(`${__dirname}/public/sosucat.twig`, {user: req.session.nanSecondeGen, info:info});
+            }
+            else{
+                res.redirect('/Accueil');
+            }
+            //compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].quiz
+            /*let ll = req.session.ngboador.lieu.split(',');
+            let NumberPublication = await User.getAllPublicationUsers(0,9);
+            let sugl = await User.getAllSuggest(ll[0], req.session.ngboador.id, 0, 3);
+            let sugl2 = await User.getAllSuggest(ll[0], req.session.ngboador.id, 3, 3);
+            /*for(let i = 0; i< 6; i++){
+                const ele = Math.floor(Math.random() * Math.floor(sugTotal.length));
+                console.log(sugTotal[ele - 1]);
+                (sugl.length < 3) ? sugl.push(sugTotal[ele - 1]) : sugl2.push(sugTotal[ele - 1]);
+            }*/
+            /*for(let i in NumberPublication){
+                const NombreLike = await User.getNumberLike(NumberPublication[i].id);
+                const NombreDoute = await User.getNumberDoute(NumberPublication[i].id);
+                const NombreComment = await User.getNumberComment(NumberPublication[i].id);
+                NumberPublication[i].comment = await User.getAllCommentByPublicationId(NumberPublication[i].id);
+                const sad = await User.getInfoUserLike(req.session.ngboador.emailcrypt, NumberPublication[i].id);
+                const doute = await User.getInfoUserDoute(req.session.ngboador.emailcrypt, NumberPublication[i].id);
+                NumberPublication[i].isLike = sad.isLike;
+                NumberPublication[i].nombreFolie = NombreLike.NumberLike;
+                NumberPublication[i].nombreLike = NombreDoute.NumberDoute;
+                NumberPublication[i].nombreComment = NombreComment.NumberComment;
+                NumberPublication[i].isDoute = doute.isDoute;
+                continue;
+            }
+            info.nom = req.session.nanSecondeGen.pseudo;
+            info.crypt = sugl;
+            info.sug2 = sugl2;
+            let totalSearch = await User.getAllUserLocal(ll[0], req.session.ngboador.id);
+            const userSearch = JSON.stringify(totalSearch);
+            fs.writeFile(__dirname + "/public/ngboado/part/usersSearch.txt", userSearch, "UTF-8", (err, file) => {
+                if (err) {
+                    console.log(err);
+                }
+                else {
+                    console.log("user ready to Search");
+                }
+            });*/
+        }
+        else res.redirect('/login')
+    });
+
+
+
     app.get('/Accueil', async (req, res)=>{
         if(req.session.nanSecondeGen){
             let info = {}
@@ -207,50 +325,46 @@ mysql.createConnection({
                     console.log("user ready to Search");
                 }
             });*/
+            const Quiz = await User.getQuiZOnline();
+            info.title = Quiz.title;
+            info.end = Quiz.end;
+            info.crypt = Quiz.encrypt;
             res.render(`${__dirname}/public/inde.twig`, {user: req.session.nanSecondeGen, info:info});
         }
         else res.redirect('/login')
     });
-    app.get('/beg', async (req, res)=>{
+    app.get('/beg/:crypt', async (req, res)=>{
         if(req.session.nanSecondeGen){
-            let info = {}
-            /*let ll = req.session.ngboador.lieu.split(',');
-            let NumberPublication = await User.getAllPublicationUsers(0,9);
-            let sugl = await User.getAllSuggest(ll[0], req.session.ngboador.id, 0, 3);
-            let sugl2 = await User.getAllSuggest(ll[0], req.session.ngboador.id, 3, 3);
-            /*for(let i = 0; i< 6; i++){
-                const ele = Math.floor(Math.random() * Math.floor(sugTotal.length));
-                console.log(sugTotal[ele - 1]);
-                (sugl.length < 3) ? sugl.push(sugTotal[ele - 1]) : sugl2.push(sugTotal[ele - 1]);
-            }*/
-            /*for(let i in NumberPublication){
-                const NombreLike = await User.getNumberLike(NumberPublication[i].id);
-                const NombreDoute = await User.getNumberDoute(NumberPublication[i].id);
-                const NombreComment = await User.getNumberComment(NumberPublication[i].id);
-                NumberPublication[i].comment = await User.getAllCommentByPublicationId(NumberPublication[i].id);
-                const sad = await User.getInfoUserLike(req.session.ngboador.emailcrypt, NumberPublication[i].id);
-                const doute = await User.getInfoUserDoute(req.session.ngboador.emailcrypt, NumberPublication[i].id);
-                NumberPublication[i].isLike = sad.isLike;
-                NumberPublication[i].nombreFolie = NombreLike.NumberLike;
-                NumberPublication[i].nombreLike = NombreDoute.NumberDoute;
-                NumberPublication[i].nombreComment = NombreComment.NumberComment;
-                NumberPublication[i].isDoute = doute.isDoute;
-                continue;
+            let crypt = req.params.crypt.replace(/<script>/g,"");
+            crypt = ent.encode(crypt);
+            const SousQuiz = await User.getSousQuiz(crypt);
+            if(!isErr(SousQuiz)){
+                if(compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].sousQuiz){
+                    res.render(`${__dirname}/public/index.twig`, {user: req.session.nanSecondeGen, info:compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)]});
+                }
+                else{
+                    compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].sousQuiz = SousQuiz.id;
+                    compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].totalTimes = SousQuiz.times * 60;
+                    compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].totalActuel = SousQuiz.times * 60;
+                    compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].niveauActuel = 0;
+                    let Questions = await User.getQuestionBySousCategorieId(SousQuiz.id);
+                    for(let i in Questions){
+                        const resposnes = await User.getResponseByQuestionId(Questions[i].id);
+                        Questions[i].responses = resposnes;
+                        continue;
+                    }
+                    
+                    compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].niveauTotal = Questions.length;
+                    compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].timesPerQuestion = SousQuiz.times * 60 / Questions.length;
+                    compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].timesQues = compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].timesPerQuestion;
+                    compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].Ques = Questions;
+                    res.render(`${__dirname}/public/index.twig`, {user: req.session.nanSecondeGen, info:compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)]});
+
+                }
             }
-            info.nom = req.session.nanSecondeGen.pseudo;
-            info.crypt = sugl;
-            info.sug2 = sugl2;
-            let totalSearch = await User.getAllUserLocal(ll[0], req.session.ngboador.id);
-            const userSearch = JSON.stringify(totalSearch);
-            fs.writeFile(__dirname + "/public/ngboado/part/usersSearch.txt", userSearch, "UTF-8", (err, file) => {
-                if (err) {
-                    console.log(err);
-                }
-                else {
-                    console.log("user ready to Search");
-                }
-            });*/
-            res.render(`${__dirname}/public/index.twig`, {user: req.session.nanSecondeGen, info:info});
+            else{
+                res.redirect('/Accueil');
+            }
         }
         else res.redirect('/login')
     });
@@ -426,19 +540,103 @@ mysql.createConnection({
             console.log(mail + '\n' + pass)
             socket.emit('vasy',{e:mail, k:pass});
         })
-        socket.on('login', async (userE) => {
-            let user = await User.verifUser(userE.e, userE.k);
-            if (!isErr(user)){
-                let me = user;
-                if (!verifUserConnected(usersConnect, me.id)){
-                    usersConnect.push(me);
-                    io.emit('logged', usersConnect.length);
-                    io.emit('newuser', me);
-                }
-                io.emit('user_exist');
+        socket.on('login', async (data) => {
+            if(compo[isExist(compo, data)].totalActuel === compo[isExist(compo, data)].totalTimes){
+                let sliderInterval = null;
+                sliderInterval = setInterval( async ()=>{
+                    console.log(compo[isExist(compo, data)].timesQues + ' / ' +  compo[isExist(compo, data)].totalActuel)
+                    if(compo[isExist(compo, data)].timesQues > 0 && compo[isExist(compo, data)].totalActuel >= 0){
+                        compo[isExist(compo, data)].timesQues -= 1;
+                        compo[isExist(compo, data)].totalActuel -= 1;
+                        socket.emit('fluor', compo[isExist(compo, data)].timesQues)
+                    }
+                    else if(compo[isExist(compo, data)].timesQues <= 0 && compo[isExist(compo, data)].totalActuel > 0){
+                        const stu = await User.getStudentID(data);
+                        let idRes = null;
+                        for(let i in compo[isExist(compo, data)].Ques[compo[isExist(compo, data)].niveauActuel].responses){
+                            if(compo[isExist(compo, data)].Ques[compo[isExist(compo, data)].niveauActuel].responses[i].choice === 1){
+                                idRes = compo[isExist(compo, data)].Ques[compo[isExist(compo, data)].niveauActuel].responses[i].id;
+                            }
+                            continue;
+                        }
+                        (idRes !== null) ? await User.setEnter(compo[isExist(compo, data)].Ques[compo[isExist(compo, data)].niveauActuel].id, idRes, stu.id) : await User.setEnterNull(compo[isExist(compo, data)].Ques[compo[isExist(compo, data)].niveauActuel].id, stu.id) 
+                        compo[isExist(compo, data)].timesQues = compo[isExist(compo, data)].timesPerQuestion;
+                        compo[isExist(compo, data)].niveauActuel = (compo[isExist(compo, data)].niveauActuel < compo[isExist(compo, data)].niveauTotal - 1) ? compo[isExist(compo, data)].niveauActuel + 1 : compo[isExist(compo, data)].niveauActuel
+                        socket.emit('new', compo[isExist(compo, data)])
+                    }
+                    else {
+                        const stu = await User.getStudentID(data);
+                        let idRes = null;
+                        for(let i in compo[isExist(compo, data)].Ques[compo[isExist(compo, data)].niveauActuel].responses){
+                            if(compo[isExist(compo, data)].Ques[compo[isExist(compo, data)].niveauActuel].responses[i].choice === 1){
+                                idRes = compo[isExist(compo, data)].Ques[compo[isExist(compo, data)].niveauActuel].responses[i].id;
+                            }
+                            continue;
+                        }
+                        (idRes !== null) ? await User.setEnter(compo[isExist(compo, data)].Ques[compo[isExist(compo, data)].niveauActuel].id, idRes, stu.id) : await User.setEnterNull(compo[isExist(compo, data)].Ques[compo[isExist(compo, data)].niveauActuel].id, stu.id)
+                        socket.emit('bblank');
+                        clearInterval(sliderInterval);
+                    }
+                }, 1000)
             }
-            return false;
+            /*compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].totalTimes = SousQuiz.times * 60;
+                    compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].totalActuel = SousQuiz.times * 60;
+                    compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].niveauActuel = 0;
+                    let Questions = await User.getQuestionBySousCategorieId(SousQuiz.id);
+                    for(let i in Questions){
+                        const resposnes = await User.getResponseByQuestionId(Questions[i].id);
+                        Questions[i].responses = resposnes;
+                        continue;
+                    }
+                    
+                    compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].niveauTotal = Questions.length;
+                    compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].timesPerQuestion = SousQuiz.times * 60 / Questions.length;
+                    compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].timesQues
+            return false;*/
         });
+        socket.on('ch', async (data)=>{
+            for(let i in compo[isExist(compo, data.del)].Ques[compo[isExist(compo, data.del)].niveauActuel].responses){
+                if(data.pel == compo[isExist(compo, data.del)].Ques[compo[isExist(compo, data.del)].niveauActuel].responses[i].crypt){
+                    compo[isExist(compo, data.del)].Ques[compo[isExist(compo, data.del)].niveauActuel].responses[i].choice = 1;
+                }
+                else{
+                    compo[isExist(compo, data.del)].Ques[compo[isExist(compo, data.del)].niveauActuel].responses[i].choice = 0;
+                }
+                continue;
+            }
+        })
+        socket.on('levUp', async (data)=>{
+            const ress = await User.getResponseIDQuestionId(data.pel);
+            const stu = await User.getStudentID(data.del);
+            
+            if(!isErr(ress) && !isErr(stu)){
+                const enter = await User.setEnter(compo[isExist(compo, data.del)].Ques[compo[isExist(compo, data.del)].niveauActuel].id,ress.id,stu.id);
+                if(!isErr(enter)){
+                    if(compo[isExist(compo, data.del)].niveauActuel < compo[isExist(compo, data.del)].niveauTotal - 1){
+                        compo[isExist(compo, data.del)].niveauActuel++;
+                        compo[isExist(compo, data.del)].totalActuel -= compo[isExist(compo, data.del)].timesQues;
+                        compo[isExist(compo, data.del)].timesQues = compo[isExist(compo, data.del)].timesPerQuestion;
+                        socket.emit('new', compo[isExist(compo, data.del)])
+                    }
+                    else{
+                        socket.emit('bblank')
+                    }
+                }
+            }
+            else{
+
+            }
+            /*for(let i in compo[isExist(compo, data.del)].Ques[compo[isExist(compo, data.del)].niveauActuel].responses){
+                if(data.pel == compo[isExist(compo, data.del)].Ques[compo[isExist(compo, data.del)].niveauActuel].responses[i].crypt){
+                    compo[isExist(compo, data.del)].Ques[compo[isExist(compo, data.del)].niveauActuel].responses[i].choice = 1;
+                }
+                else{
+                    compo[isExist(compo, data.del)].Ques[compo[isExist(compo, data.del)].niveauActuel].responses[i].choice = 0;
+                }
+                console.log(compo[isExist(compo, data.del)].Ques[compo[isExist(compo, data.del)].niveauActuel].responses[i])
+                continue;
+            }*/
+        })
         socket.on('inbox', async (message)=>{
             if(message.context === ""){
                 socket.emit('eroorMsg', 'AUCUN CONTENU');
@@ -497,13 +695,9 @@ mysql.createConnection({
             Lastcomment.pub = data.pub_id;
             io.emit('newcomment', Lastcomment);
         });
-        socket.on("likePub",async (data)=>{
-            const setLike = await User.setLikeByPublicationAndUserId(data.pub_id,data.user_id);
-            let getLike = await User.getNumberLike(data.pub_id);
-            getLike.comment = await User.getNumberDoute(data.pub_id);
-            getLike.id = data.pub_id;
-            io.emit('getLike', getLike);
-        });
+        socket.on('mel', async (data) =>{
+            console.log(data);
+        })
         socket.on("inf",async (data)=>{
             const publihedAll = await User.getAllPublicationUsers(data.mv, 6);
             const em = await User.getUserByEmail(data.e);
