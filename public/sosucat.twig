@@ -69,27 +69,17 @@
   </head>
   <body>
 
-    <nav id="menu" class="menu">
-      <a href="/beg">
-        <header class="menu-header">
-          <img src="../Assets/images//Profil/{{ random(['1.jpg', '2.jpg', '5.png', '6.jpg','35.png', '33.png', '56.jpg', '25.jpg']) }}" alt="img">
-        </header>
-      </a>
-
-      <section class="menu-section">
-        <h3 class="menu-section-title">{{ user.pseudo }}</h3>
-        <ul class="menu-section-list">
-          <li><a href="/Profil">Profil</a></li>
-          <li><a href="/setting">Paramatres</a></li>
-          <li><a href="/Level">Classement</a></li>
-        </ul>
-      </section>
-    </nav>
+    
 
     <main id="panel" class="panel" data-ryu-ele="{{ user.emailcrypt }}">
-      <header class="panel-header">
-        <button class="btn-hamburger js-slideout-toggle"></button>
+<header class="panel-header">
+<ul>
+          <li><a href="/profil"> Profil</a></li>
+          <li><a href="/params">Params</a></li>
+          <li><a href="/classe">Classement</a></li>
+        </ul> 
       </header>
+      <video src="../Assets/videos/{{ random(['1', '2', '3', '4']) }}.mp4" class="ele" autoplay muted loop></video>
 
       <div class="container-fluid">
       <div class="row">

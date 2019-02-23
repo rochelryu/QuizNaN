@@ -47,11 +47,43 @@ let User = class {
         })
     }
 
+    static getMoyOfQuizBySousquizId(catId){
+        return new Promise((next) =>{
+            db.query("SELECT AVG(note) ele FROM moyenne WHERE souscategorie_id = ?", [parseInt(catId, 10)])
+                .then((result) =>{
+                    next(result[0]);
+                }).catch((error) => {
+                next(error);
+            });
+        })
+    }
+
+    static getNoteUsers(sousCat){
+        return new Promise((next) =>{
+            db.query("SELECT moyenne.note, student.pseudo FROM moyenne LEFT JOIN student ON moyenne.student_id = student.id WHERE moyenne.souscategorie_id = ? ORDER BY moyenne.note DESC", [parseInt(sousCat, 10)])
+                .then((result) =>{
+                    next(result);
+                }).catch((error) => {
+                next(error);
+            });
+        })
+    }
+
     static getSousCategorieBy(quizId){
         return new Promise((next) =>{
             db.query("SELECT * FROM souscateg WHERE quizNaN_id = ? ORDER BY end ASC", [parseInt(quizId, 10)])
                 .then((result) =>{
                     next(result);
+                }).catch((error) => {
+                next(error);
+            });
+        })
+    }
+    static getSousCategorie(catId){
+        return new Promise((next) =>{
+            db.query("SELECT * FROM souscateg WHERE id = ? ", [parseInt(catId, 10)])
+                .then((result) =>{
+                    next(result[0]);
                 }).catch((error) => {
                 next(error);
             });
@@ -273,12 +305,13 @@ let User = class {
         })
     }
 
-    static setNote(souscateg, student_Id, note){
+    static setNote(souscateg, student_Id, note, erro, times, etat, trouve){
         return new Promise((next)=>{
-            db.query("INSERT INTO moyenne (souscategorie_id, student_id, note) VALUES (?,?,?)", [parseInt(souscateg, 10), parseInt(student_Id, 10), note])
+            db.query("INSERT INTO moyenne (souscategorie_id, student_id, note, errors, time, etat, trouve) VALUES (?,?,?,?,?,?,?)", [parseInt(souscateg, 10), parseInt(student_Id, 10), note, parseInt(erro, 10), parseInt(times, 10), parseInt(etat, 10), parseInt(trouve, 10)])
             .then((result)=>{
                 next(result[0]);
             }).catch((err)=>{
+                console.log(err);
                 next(err);
             })
         })

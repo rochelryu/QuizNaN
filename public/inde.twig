@@ -21,34 +21,22 @@
     <style>
       .slideout-menu { left: auto; }
       .btn-hamburger { left: auto; right: 12px;}
-      .box { min-height: 650px; }
+      .box { min-height: 800px; }
     </style>
   </head>
   <body>
 
-    <nav id="menu" class="menu">
-      <a href="/beg">
-        <header class="menu-header">
-          <img src="Assets/images//Profil/{{ random(['1.jpg', '2.jpg', '5.png', '6.jpg','35.png', '33.png', '56.jpg', '25.jpg']) }}" alt="img">
-        </header>
-      </a>
-
-      <section class="menu-section">
-        <h3 class="menu-section-title">{{ user.pseudo }}</h3>
-        <ul class="menu-section-list">
-          <li><a href="/Profil">Profil</a></li>
-          <li><a href="/setting">Paramatres</a></li>
-          <li><a href="/Level">Classement</a></li>
-        </ul>
-      </section>
-    </nav>
-
     <main id="panel" class="panel">
       <header class="panel-header">
-        <button class="btn-hamburger js-slideout-toggle"></button>
+<ul>
+          <li><a href="/profil"> Profil</a></li>
+          <li><a href="/params">Params</a></li>
+          <li><a href="/classe">Classement</a></li>
+        </ul> 
       </header>
+      <video src="Assets/videos/{{ random(['1', '2', '3', '4']) }}.mp4" class="ele" autoplay muted loop></video>
 
-      <section class="box">
+      <section class="box" style="background: url(Assets/images/Profil/{{ random(['8.png', '6.jpg', '5.png', '35.png', '33.png', '8.png', '22.gif', '09.gif', '02.gif', '005.gif', '07.gif', '88.gif'  ]) }}) no-repeat; background-size: cover;">
         <div class="content">
           <div class="titles">
           <ul class="EleQuiz">

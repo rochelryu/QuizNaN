@@ -1,0 +1,252 @@
+<!doctype html>
+<!--[if IE 8]><html class="ie8 lt-ie10"><![endif]-->
+<!--[if IE 9]><html class="ie9 lt-ie10"><![endif]-->
+<!--[if gt IE 9]><!--><html lang="fr"><!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="cleartype" content="on">
+    <meta name="MobileOptimized" content="320">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <link rel="icon" type="image/png" href="../assets/images/icon/logo.png" />
+        <link href="../Assets/Css/fontawesome-all.css" rel="stylesheet">
+        <link href="../Assets/Css/bootstrap.min.css" rel="stylesheet">
+        <link href="../Assets/Css/mdb.min.css" rel="stylesheet">
+        <link href="../Assets/Css/jquery.notify.css" rel="stylesheet">
+    <link rel="stylesheet" href="../Assets/Css/bar.css">
+    <link rel="stylesheet" href="../Assets/Css/test.css">
+    <link rel="stylesheet" href="../Assets/Css/index.css">
+    <link rel="stylesheet" href="../Assets/Css/style1.css">
+    <title>{{ user.pseudo|capitalize }}</title>
+    <style>
+      .slideout-menu { left: auto; }
+      .btn-hamburger { left: auto; right: 12px;}
+      .box { min-height: 650px; }
+      .mw{
+          min-width: 100%;
+      }
+      .pointer{
+          display:none;
+      }
+    </style>
+    <script>
+    function horodatage(date) {
+        var post = new Date(date).getTime();
+        var month = new Date(date).getMonth() + 1;
+        var day = date.substring(8,10);
+        var year = new Date(date).getFullYear();
+        var hour = new Date(date).getHours();
+        var min = new Date(date).getMinutes();
+        var atMoment = new Date().getTime();
+        post /= 1000;
+        atMoment /= 1000;
+        var fior = parseInt((post - atMoment), 10);
+        if (fior >= 86400) {
+            if (parseInt((fior/86400), 10) == 1){
+
+                document.write("Prend fin demain, " + hour + "H:"+ min +"min");
+            }
+            else{
+                document.write("Prend fin Le " + day +"-"+ month +"-"+ year +", "+ hour + "H:"+ min +"min");
+            }
+        }
+        else if(fior >= 3600 && fior < 86400){
+            if(parseInt((fior/3600), 10) == 1){
+                document.write("Prend fin dans " + parseInt((fior/3600), 10) + " Hr");
+            }
+            else{
+                document.write("Prend fin dans " + parseInt((fior/3600), 10) + " Hrs");
+            }
+        }
+        else if(fior >= 60 && fior < 3600){
+            if(parseInt((fior/60), 10) == 1)
+                document.write("Prend fin dans " + parseInt((fior/60), 10) + " Min");
+            else
+                document.write("Prend fin dans " + parseInt((fior/60), 10) + " Mins");
+        }
+        else{
+            if (fior <= 0){
+                document.write("Fermé");
+            }
+            else document.write("Prend fin dans  " + fior + " Sec");
+        }
+    }
+    </script>
+  </head>
+  <body>
+
+    
+
+    <main id="panel" class="panel" data-ryu-ele="{{ info.moy.souscategorie_id }}">
+<header class="panel-header">
+<ul>
+          <li><a href="/profil"> Profil</a></li>
+          <li><a href="/params">Params</a></li>
+          <li><a href="/classe">Classement</a></li>
+        </ul> 
+      </header>
+      <video src="Assets/videos/{{ random(['1', '2', '3', '4']) }}.mp4" class="ele" autoplay muted loop></video>
+
+      <div class="container-fluid">
+        <div class="row">
+            <div class="outer-w3-agile col-xl">
+                        <div class="stat-grid p-3 mt-3 d-flex align-items-center justify-content-between {{ (info.moy.etat == 1)? 'bg-success': 'bg-danger' }}">
+                            <div class="s-l">
+                                <h5>{{ (info.moy.etat == 1)? 'Validé': 'Echec' }}</h5>
+                                <p class="paragraph-agileits-w3layouts">
+                                {% if info.moy.note >= info.moy.moyen + 20 %}
+                                <Tu es NaN />
+                                {% elseif info.moy.moyen + 20 > info.moy.note and info.moy.moyen + 8 <= info.moy.note %}
+                                Mon Conquérant, Super... Continue Comme ça
+                                {% elseif info.moy.moyen + 8 > info.moy.note and info.moy.moyen <= info.moy.note %}
+                                Super. On peut compter Sur toi pour la suite
+                                {% elseif info.moy.moyen > info.moy.note and info.moy.moyen - 10 < info.moy.note %}
+                                Vous etiez presque !!! ça va allez la prochaine fois
+                                {% elseif info.moy.moyen - 10 >= info.moy.note and info.moy.moyen - 20 < info.moy.note %}
+                                être NaNiens c'est pas une question de Poudondon
+                                {% elseif info.moy.moyen - 20 >= info.moy.note and info.moy.moyen - 30 < info.moy.note %}
+                                VA BOSSER TES LEçons Avant De venir composer
+                                {% else %}
+                                La prochaine fois tu seras Dans corbeille de NaN.
+                                {% endif %}
+                                </p>
+                            </div>
+                            <div class="s-r">
+                                <h6>{{ info.moy.note }}
+                                    <i class="fas fa-tasks"></i>
+                                </h6>
+                            </div>
+                        </div>
+
+                        <div class="stat-grid p-3 mt-3 d-flex align-items-center justify-content-between {{ (info.gl >= info.moy.moyen)? 'bg-success': 'bg-danger' }}">
+                            <div class="s-l">
+                                <h5>Moyenne General De tous les étudiants</h5>
+                                <p class="paragraph-agileits-w3layouts">Moyenne selon la particpation des utilisateurs</p>
+                            </div>
+                            <div class="s-r" id="moyG">
+                                <h6>{{ info.gl }}
+                                    <i class="fas fa-chart-line"></i>
+                                </h6>
+                            </div>
+                        </div>
+
+                        <div class="stat-grid p-3 mt-3 d-flex align-items-center justify-content-between bg-primary">
+                            <div class="s-l">
+                                <h5>Participants</h5>
+                            </div>
+                            <div class="s-r" id="participant">
+                                <h6>{{ info.name.length }}
+                                    <i class="fas fa-users"></i>
+                                </h6>
+                            </div>
+                            
+                        </div>
+            </div>
+                    <!--// Stats -->
+                    <!-- Pie-chart -->
+            <div class="outer-w3-agile col-xl ml-xl-3 mt-xl-0 mt-3">
+                        <h4 class="tittle-w3-agileits mb-4">Pie Chart</h4>
+                        <div id="chartdiv"></div>
+            </div>
+        </div>
+        <div class="row">
+        <div class="outer-w3-agile mt-3 mw">
+                <h4 class="tittle-w3-agileits mb-4">Bar Chart</h4>
+                <div id="chart-1"></div>
+            </div>
+        </div>
+      </div>
+          </main>
+    <script src="/socket.io/socket.io.js"></script>
+      <script type="text/javascript" src="../Assets/Js/jquery-3.3.1.min.js"></script>
+      <script type="text/javascript" src="../Assets/Js/fontawesome-all.js"></script>
+      <script type="text/javascript" src="../Assets/Js/jquery.notify.js"></script>
+      <script type="text/javascript" src="../Assets/Js/popper.min.js"></script>
+      <script type="text/javascript" src="../Assets/Js/bootstrap.min.js"></script>
+      <script type="text/javascript" src="../Assets/Js/mdb.min.js"></script>
+      <script type="text/javascript" src="../Assets/Js/shh.js"></script>
+    <script src="../Assets/Js/slideout.min.js"></script>
+    <script src='../Assets/Js/amcharts.js'></script>
+    <script src="../Assets/Js/rumcaJS.js"></script>
+    <script>
+    let name = new Array();
+    {% for ele in info.name %}
+        name.push("{{ ele }}")
+    {% endfor %}
+    var data = [{
+        "name": "Miasta",
+        "axisY": name,
+        "axisX": ["10%", "20%", "30%", "40%", "50%", "60%", "70%", "80%", "90%", "100%"],
+        "bars": [{{ info.note }}]
+    }];
+
+    // My options
+    var options = {
+        data: data[0],
+        showValues: true,
+        showVerticalLines: true,
+        showHorizontalLines: true,
+        animation: true,
+        animationOffset: 200,
+    };
+
+    // Defaul chart
+    var $myChart = $('#chart-1');
+
+    $myChart.horizontalChart(options);
+
+        var chart;
+        var legend;
+
+        var chartData = [{
+                country: "Erreurs",
+                value: {{ info.moy.errors }}
+            },
+            {
+                country: "Response Juste",
+                value: {{ info.moy.trouve }}
+            },
+            {
+                country: "Question Laissé",
+                value: {{ info.und }}
+            }
+        ];
+
+        AmCharts.ready(function () {
+            // PIE CHART
+            chart = new AmCharts.AmPieChart();
+            chart.dataProvider = chartData;
+            chart.titleField = "country";
+            chart.valueField = "value";
+            chart.outlineColor = "";
+            chart.outlineAlpha = 0.8;
+            chart.outlineThickness = 2;
+            // this makes the chart 3D
+            chart.depth3D = 20;
+            chart.angle = 30;
+
+            // WRITE
+            chart.write("chartdiv");
+        });
+    </script>
+    <script>
+      window.onload = function() {
+        var slideout = new Slideout({
+          'panel': document.getElementById('panel'),
+          'menu': document.getElementById('menu'),
+          'side': 'right'
+        });
+
+        document.querySelector('.js-slideout-toggle').addEventListener('click', function() {
+          slideout.toggle();
+        });
+
+        document.querySelector('.menu').addEventListener('click', function(eve) {
+          if (eve.target.nodeName === 'A') { slideout.close(); }
+        });
+      };
+    </script>
+  </body>
+</html>

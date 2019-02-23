@@ -55,33 +55,55 @@ mysql.createConnection({
         if(req.session.nanSecondeGen !== undefined){
             const moy = await User.getVerifNote(compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].sousQuiz, req.session.nanSecondeGen.id);
             if(!isErr(moy)){
-                console.log('Deja noté');
-                res.send(moy);
+                let info = {}
+                let name = new Array();
+                let note = new Array();
+                const responseT = await User.getNumberQuestion(compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].sousQuiz)
+                const stud = await User.getNoteUsers(compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].sousQuiz);
+                const med = await User.getMoyOfQuizBySousquizId(compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].sousQuiz)
+                for(let i in stud){
+                    name.push(stud[i].pseudo);
+                    note.push(stud[i].note);
+                    continue;
+                }
+                info.name = name;
+                info.gl  = med.ele;
+                info.gl = info.gl.toFixed(2)
+                info.note = note;
+                info.moy = moy;
+                info.und = responseT.NumberQ - (moy.errors + moy.trouve);
+                res.render(`${__dirname}/public/resul.twig`, {user: req.session.nanSecondeGen, info:info});
             }
             else{
-                console.log('pas encore noté');
                 let erreur = 0;
                 let note = 0;
-            for(let i in compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].Ques){
-                const respo = await User.getResponseForComparate(compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].Ques[i].id, req.session.nanSecondeGen.id)
-                const tcheck = await User.getResponseFullComparate(respo.response_id);
-                if(!isErr(tcheck) && respo.response_id !== null){
-                    note += (100 / compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].niveauTotal);
-                }
-                else if(isErr(tcheck) && respo.response_id !== null){
-                    erreur = erreur + 1;
-                    if(note !== 0){
-                        note -= (100 / compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].niveauTotal);
+                let trouve = 0;
+                for(let i in compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].Ques){
+                    const respo = await User.getResponseForComparate(compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].Ques[i].id, req.session.nanSecondeGen.id)
+                    const tcheck = await User.getResponseFullComparate(respo.response_id);
+                    if(!isErr(tcheck) && respo.response_id !== null){
+                        trouve =  trouve + 1;
+                        note += (100 / compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].niveauTotal);
                     }
+                    else if(isErr(tcheck) && respo.response_id !== null){
+                        erreur = erreur + 1;
+                        if(note !== 0){
+                            note -= (100 / compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].niveauTotal);
+                        }
+                    }
+                    else{
+                        note = note;
+                    }
+                    continue;
                 }
-                else{
-                    note = note;
-                }
-                continue;
-            }
-            console.log('ma note est : ' + note);
-            const intent = await User.setNote(compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].sousQuiz, req.session.nanSecondeGen.id, note);
-            res.send(intent);
+                console.log('ma note est : ' + note);
+                const moy = await User.getSousCategorie(compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].sousQuiz)
+                const etat = (note >= moy.moyen) ? 1 : 0;
+                let time =  compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].totalTimes - compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].VraiTimes;
+                const intent = await User.setNote(compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].sousQuiz, req.session.nanSecondeGen.id, note, erreur, time, etat, trouve);
+                
+                    res.redirect('/result')
+
             }
         }
         else{
@@ -338,7 +360,12 @@ mysql.createConnection({
             let crypt = req.params.crypt.replace(/<script>/g,"");
             crypt = ent.encode(crypt);
             const SousQuiz = await User.getSousQuiz(crypt);
-            if(!isErr(SousQuiz)){
+            const moy = await User.getVerifNote(SousQuiz.id, req.session.nanSecondeGen.id);
+            if(!isErr(moy)){
+                compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].sousQuiz = SousQuiz.id;
+                res.redirect('/result');
+            }
+            else if(!isErr(SousQuiz)){
                 if(compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].sousQuiz){
                     res.render(`${__dirname}/public/index.twig`, {user: req.session.nanSecondeGen, info:compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)]});
                 }
@@ -346,6 +373,7 @@ mysql.createConnection({
                     compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].sousQuiz = SousQuiz.id;
                     compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].totalTimes = SousQuiz.times * 60;
                     compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].totalActuel = SousQuiz.times * 60;
+                    compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].VraiTimes = SousQuiz.times * 60;
                     compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].niveauActuel = 0;
                     let Questions = await User.getQuestionBySousCategorieId(SousQuiz.id);
                     for(let i in Questions){
@@ -541,13 +569,13 @@ mysql.createConnection({
             socket.emit('vasy',{e:mail, k:pass});
         })
         socket.on('login', async (data) => {
-            if(compo[isExist(compo, data)].totalActuel === compo[isExist(compo, data)].totalTimes){
                 let sliderInterval = null;
                 sliderInterval = setInterval( async ()=>{
                     console.log(compo[isExist(compo, data)].timesQues + ' / ' +  compo[isExist(compo, data)].totalActuel)
                     if(compo[isExist(compo, data)].timesQues > 0 && compo[isExist(compo, data)].totalActuel >= 0){
                         compo[isExist(compo, data)].timesQues -= 1;
                         compo[isExist(compo, data)].totalActuel -= 1;
+                        compo[isExist(compo, data)].VraiTimes -= 1;
                         socket.emit('fluor', compo[isExist(compo, data)].timesQues)
                     }
                     else if(compo[isExist(compo, data)].timesQues <= 0 && compo[isExist(compo, data)].totalActuel > 0){
@@ -578,7 +606,6 @@ mysql.createConnection({
                         clearInterval(sliderInterval);
                     }
                 }, 1000)
-            }
             /*compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].totalTimes = SousQuiz.times * 60;
                     compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].totalActuel = SousQuiz.times * 60;
                     compo[isExist(compo, req.session.nanSecondeGen.emailcrypt)].niveauActuel = 0;
@@ -605,6 +632,25 @@ mysql.createConnection({
                 continue;
             }
         })
+        socket.on('newAdverse', async (data)=>{
+                let info = {}
+                let name = new Array();
+                let note = new Array();
+                const stud = await User.getNoteUsers(data);
+                const med = await User.getMoyOfQuizBySousquizId(data)
+                for(let i in stud){
+                    name.push(stud[i].pseudo);
+                    note.push(stud[i].note);
+                    continue;
+                }
+                info.name = name;
+                info.gl  = med.ele;
+                info.gl = info.gl*100;          // 556.845
+                info.gl = Math.round(info.gl); // 556
+                info.gl = info.gl/100;   
+                info.note = note;
+                io.emit('resNes', info);
+        })
         socket.on('levUp', async (data)=>{
             const ress = await User.getResponseIDQuestionId(data.pel);
             const stu = await User.getStudentID(data.del);
@@ -624,7 +670,18 @@ mysql.createConnection({
                 }
             }
             else{
-
+                const enter = await User.setEnterNull(compo[isExist(compo, data.del)].Ques[compo[isExist(compo, data.del)].niveauActuel].id,stu.id);
+                if(!isErr(enter)){
+                    if(compo[isExist(compo, data.del)].niveauActuel < compo[isExist(compo, data.del)].niveauTotal - 1){
+                        compo[isExist(compo, data.del)].niveauActuel++;
+                        compo[isExist(compo, data.del)].totalActuel -= compo[isExist(compo, data.del)].timesQues;
+                        compo[isExist(compo, data.del)].timesQues = compo[isExist(compo, data.del)].timesPerQuestion;
+                        socket.emit('new', compo[isExist(compo, data.del)])
+                    }
+                    else{
+                        socket.emit('bblank')
+                    }
+                }
             }
             /*for(let i in compo[isExist(compo, data.del)].Ques[compo[isExist(compo, data.del)].niveauActuel].responses){
                 if(data.pel == compo[isExist(compo, data.del)].Ques[compo[isExist(compo, data.del)].niveauActuel].responses[i].crypt){

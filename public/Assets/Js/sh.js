@@ -32,7 +32,6 @@ $(document).ready(function(){
       socket.on('new', function(data){
         var fileQ = "";
         var local = "";
-        console.log(data);
         if(data.Ques[data.niveauActuel].files != null){
           fileQ = '<br> <img src="Assets/images/quiz/'+ data.Ques[data.niveauActuel].files +'" class="img-fluid img-perso" />';
         }

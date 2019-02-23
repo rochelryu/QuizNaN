@@ -22,7 +22,7 @@
   <body>
   <div class="quiz-container">
     <div class="levelQ"> <div id="adent" class="absContent" style="right: {{ 100 - ((info.niveauActuel + 1) * 100) / info.niveauTotal  }}%"><p>{{ info.niveauActuel + 1 }}/{{ info.niveauTotal }}</p></div> </div>
-    <div class="lem"><p>{{ info.timesPerQuestion }}</p></div>
+    <div class="lem"><p>{{ info.timesQues }}</p></div>
     <div class="question box">
       <p> <span>{{ info.niveauActuel + 1 }}.</span> {{ info.Ques[info.niveauActuel].content }} {% if info.Ques[info.niveauActuel].files != null %} <br> <img src="Assets/images/quiz/{{ info.Ques[info.niveauActuel].files }}" class="img-fluid img-perso" /> {% endif %}
       {{ info.Ques[info.niveauActuel].files }} </p>
