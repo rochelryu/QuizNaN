@@ -111,6 +111,15 @@ mysql.createConnection({
         }
     })
 
+    app.get('/profil', async (req,res) =>{
+        if(req.session.nanSecondeGen){
+        res.render(`${__dirname}/public/profil.twig`, {user: req.session.nanSecondeGen})
+        }
+        else{
+            res.redirect('login');
+        }
+    })
+
     app.get('/login', async (req, res) =>{
         if(req.session.nanSecondeGen){
             res.redirect('/Accueil');
@@ -440,53 +449,7 @@ mysql.createConnection({
         else res.redirect('/login')
     });
 
-    /////////ACCOUNT
-    app.get('/profil', async (req, res)=>{
-        if(req.session.ngboador) {
-            let info = {}
-            const follower = await User.getAllAbonnéByUserEmailCrypt(req.session.ngboador.emailcrypt);
-            const followers = await User.getAllGroupByUserEmailCrypt(req.session.ngboador.emailcrypt);
-            let NumberPublication = await User.getAllPublicationByUserEmailCrypt(req.session.ngboador.emailcrypt, 0, 9);
-            info.recomandation = await User.getTwoLastRecommandation(req.session.ngboador.emailcrypt);
-            const rec = await User.getAllREcommandationCount(req.session.ngboador.emailcrypt);
-            info.gallery = await User.getAllGalleryByUserEmailCrypt(req.session.ngboador.emailcrypt);
-            const pub = await User.getCountPublication(req.session.ngboador.emailcrypt);
-            info.publi = pub.numbers;
-            for(let i in NumberPublication){
-                const NombreLike = await User.getNumberLike(NumberPublication[i].id);
-                const NombreDoute = await User.getNumberDoute(NumberPublication[i].id);
-                const NombreComment = await User.getNumberComment(NumberPublication[i].id);
-                NumberPublication[i].comment = await User.getAllCommentByPublicationId(NumberPublication[i].id);
-                const sad = await User.getInfoUserLike(req.session.ngboador.emailcrypt, NumberPublication[i].id);
-                const doute = await User.getInfoUserDoute(req.session.ngboador.emailcrypt, NumberPublication[i].id);
-                NumberPublication[i].isLike = sad.isLike;
-                NumberPublication[i].nombreFolie = NombreLike.NumberLike;
-                NumberPublication[i].nombreLike = NombreDoute.NumberDoute;
-                NumberPublication[i].nombreComment = NombreComment.NumberComment;
-                NumberPublication[i].isDoute = doute.isDoute;
-                continue;
-            }
-
-            info.published = NumberPublication;
-            info.ami = follower.follow;
-            info.group = followers.follow;
-            info.NumberRec = rec.recom;
-            let ll = req.session.ngboador.lieu.split(',');
-            let totalSearch = await User.getAllUserLocal(ll[0], req.session.ngboador.id);
-            const userSearch = JSON.stringify(totalSearch);
-            fs.writeFile(__dirname + "/public/ngboado/part/usersSearch.txt", userSearch, "UTF-8", (err, file) => {
-                if (err) {
-                    console.log(err);
-                }
-                else {
-                    console.log("user ready to Search");
-                }
-            });
-            res.render(`${__dirname}/public/ngboado/profil.twig`, {user: req.session.ngboador, info: info});
-        }
-        else res.redirect('/login')
-    });
-
+    
     app.get('/ownL/:emailcrypt', async (req, res)=>{
         if(req.session.ngboador && req.params.emailcrypt !== "") {
             let email = req.params.emailcrypt.replace(/<script>/g,"");
