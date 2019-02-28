@@ -45,3 +45,15 @@ exports.strinfToDate = (data)=>{
     date.setFullYear(tab[0]);
     return date;
 }
+exports.horodatage = (date) => {
+    var ele = false;
+    var post = new Date(date).getTime();
+    var atMoment = new Date().getTime();
+    post /= 1000;
+    atMoment /= 1000;
+    var fior = parseInt((post - atMoment), 10);
+    if (fior <= 0){
+        ele = true;
+    }
+    return ele;
+}

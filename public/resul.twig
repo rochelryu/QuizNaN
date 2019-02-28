@@ -31,49 +31,7 @@
           display:none;
       }
     </style>
-    <script>
-    function horodatage(date) {
-        var post = new Date(date).getTime();
-        var month = new Date(date).getMonth() + 1;
-        var day = date.substring(8,10);
-        var year = new Date(date).getFullYear();
-        var hour = new Date(date).getHours();
-        var min = new Date(date).getMinutes();
-        var atMoment = new Date().getTime();
-        post /= 1000;
-        atMoment /= 1000;
-        var fior = parseInt((post - atMoment), 10);
-        if (fior >= 86400) {
-            if (parseInt((fior/86400), 10) == 1){
-
-                document.write("Prend fin demain, " + hour + "H:"+ min +"min");
-            }
-            else{
-                document.write("Prend fin Le " + day +"-"+ month +"-"+ year +", "+ hour + "H:"+ min +"min");
-            }
-        }
-        else if(fior >= 3600 && fior < 86400){
-            if(parseInt((fior/3600), 10) == 1){
-                document.write("Prend fin dans " + parseInt((fior/3600), 10) + " Hr");
-            }
-            else{
-                document.write("Prend fin dans " + parseInt((fior/3600), 10) + " Hrs");
-            }
-        }
-        else if(fior >= 60 && fior < 3600){
-            if(parseInt((fior/60), 10) == 1)
-                document.write("Prend fin dans " + parseInt((fior/60), 10) + " Min");
-            else
-                document.write("Prend fin dans " + parseInt((fior/60), 10) + " Mins");
-        }
-        else{
-            if (fior <= 0){
-                document.write("Fermé");
-            }
-            else document.write("Prend fin dans  " + fior + " Sec");
-        }
-    }
-    </script>
+    
   </head>
   <body>
 
@@ -83,7 +41,7 @@
 <header class="panel-header">
 <ul>
           <li><a href="/profil"> Profil</a></li>
-          <li><a href="/params">Params</a></li>
+          <li><a href="/">Accueil</a></li>
           <li><a href="/classe">Classement</a></li>
         </ul> 
       </header>
@@ -167,7 +125,6 @@
       <script type="text/javascript" src="../Assets/Js/bootstrap.min.js"></script>
       <script type="text/javascript" src="../Assets/Js/mdb.min.js"></script>
       <script type="text/javascript" src="../Assets/Js/shh.js"></script>
-    <script src="../Assets/Js/slideout.min.js"></script>
     <script src='../Assets/Js/amcharts.js'></script>
     <script src="../Assets/Js/rumcaJS.js"></script>
     <script>
@@ -231,22 +188,6 @@
             chart.write("chartdiv");
         });
     </script>
-    <script>
-      window.onload = function() {
-        var slideout = new Slideout({
-          'panel': document.getElementById('panel'),
-          'menu': document.getElementById('menu'),
-          'side': 'right'
-        });
-
-        document.querySelector('.js-slideout-toggle').addEventListener('click', function() {
-          slideout.toggle();
-        });
-
-        document.querySelector('.menu').addEventListener('click', function(eve) {
-          if (eve.target.nodeName === 'A') { slideout.close(); }
-        });
-      };
-    </script>
+    
   </body>
 </html>

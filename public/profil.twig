@@ -17,7 +17,7 @@
         <link href="Assets/Css/jquery.notify.css" rel="stylesheet">
     <link rel="stylesheet" href="Assets/Css/test.css">
     <link rel="stylesheet" href="Assets/Css/index.css">
-    <link rel="stylesheet" href="Assets/Css/stylePr.css">
+    <link rel="stylesheet" href="Assets/Css/style3.css">
     <title>{{ user.pseudo|capitalize }}</title>
     <style>
       .slideout-menu { left: auto; }
@@ -30,7 +30,7 @@
       <header class="panel-header">
 <ul>
           <li><a href="/profil"> Profil</a></li>
-          <li><a href="/params">Params</a></li>
+          <li><a href="/">Accueil</a></li>
           <li><a href="/classe">Classement</a></li>
         </ul> 
       </header>
@@ -40,41 +40,61 @@
   
   <div class="profile-card js-profile-card">
     <div class="profile-card__img">
-      <img src="https://res.cloudinary.com/muhammederdem/image/upload/v1537638518/Ba%C5%9Fl%C4%B1ks%C4%B1z-1.jpg" alt="profile card">
+      <img src="Assets/images/Profil/{{ random(['1.jpg', '2.jpg' ]) }}" alt="profile card">
     </div>
 
     <div class="profile-card__cnt js-profile-cnt">
-      <div class="profile-card__name">Muhammed Erdem</div>
-      <div class="profile-card__txt">Front-end Developer from <strong>Mesopotamia</strong></div>
+      <div class="profile-card__name">{{ user.pseudo }}</div>
+      <div class="profile-card__txt">Rendement
+      {% if info.moyN != null and info.moyN >= info.moyD + 20 %}
+  <strong>Très Bien</strong>
+  {% elseif info.moyN != null and info.moyD + 20 > info.moyN and info.moyD + 10 <= info.moyN %}
+  <strong>Bien</strong>
+  {% elseif info.moyN != null and info.moyD + 10 > info.moyN and info.moyD + 5 <= info.moyN %}
+  <strong>Assez Bien</strong>
+  {% elseif info.moyN != null and info.moyD + 5 > info.moyN and info.moyD <= info.moyN %}
+  <strong>Passable</strong>
+  {% elseif info.moyN != null and info.moyD - 5 < info.moyN and info.moyD > info.moyN %}
+  <strong>Insuffisant</strong>
+  {% elseif info.moyN != null and info.moyD - 15 < info.moyN and info.moyD - 5 >= info.moyN %}
+  <strong>Mauvais</strong>
+  {% elseif info.moyN != null and info.moyD - 25 < info.moyN and info.moyD - 15 >= info.moyN %}
+  <strong>Mediocre</strong>
+  {% elseif info.moyN == null  %}
+<strong>Aucune Note</strong>
+                                {% else %}
+<strong>Nul</strong>
+                                {% endif %} 
+      </div>
       <div class="profile-card-loc">
         <span class="profile-card-loc__icon">
-          <svg class="icon"><use xlink:href="#icon-location"></use></svg>
-        </span>
+  <i class="fab fa-edit-alt"></i>
+</span>
 
         <span class="profile-card-loc__txt">
-          Istanbul, Turkey
+          {{ ( info.moyN != null)? info.moyN : 'Pas de Moyenne' }}
         </span>
       </div>
 
       <div class="profile-card-inf">
         <div class="profile-card-inf__item">
-          <div class="profile-card-inf__title">1598</div>
-          <div class="profile-card-inf__txt">Followers</div>
+          <div class="profile-card-inf__title">{{ info.totQuiz }}</div>
+          <div class="profile-card-inf__txt">Total Quiz</div>
         </div>
 
         <div class="profile-card-inf__item">
-          <div class="profile-card-inf__title">65</div>
-          <div class="profile-card-inf__txt">Following</div>
+          <div class="profile-card-inf__title">{{ info.fait}}</div>
+          <div class="profile-card-inf__txt">Quiz Fait</div>
         </div>
 
         <div class="profile-card-inf__item">
-          <div class="profile-card-inf__title">123</div>
-          <div class="profile-card-inf__txt">Articles</div>
+          <div class="profile-card-inf__title">{{ info.valid }}</div>
+          <div class="profile-card-inf__txt">Quiz Validé</div>
         </div>
 
         <div class="profile-card-inf__item">
-          <div class="profile-card-inf__title">85</div>
-          <div class="profile-card-inf__txt">Works</div>
+          <div class="profile-card-inf__title">{{ info.echec }}</div>
+          <div class="profile-card-inf__txt">Quiz Echoué</div>
         </div>
       </div>
 
@@ -124,15 +144,106 @@
       </div>
 
       <div class="profile-card-ctr">
-        <button class="profile-card__button button--blue js-message-btn">Message</button>
-        <button class="profile-card__button button--orange">Follow</button>
+        <button class="profile-card__button button--blue js-message-btn">Changer Mot de Passe</button>
+        <button class="profile-card__button button--orange js-message-btn2">Changer Pseudo</button>
       </div>
+      <div class="clearfix"></div>
+      {% if info.moyN != null %}
+      <div class="container-fluid" style="max-width: 1600px; margin: 0 auto;padding: 0px !important;">
+								<div id="slider">
+									<div class="dp-wrap">
+										<div id="dp-slider">
+                    {% for item in info.quiz %}
+											<div class="dp_item" data-class="{{ loop.index }}" data-position="{{ loop.index }}">
+												<div class="dp-content">
+
+													<h2>{{ item.title }}</h2>
+													<p> {{ item.note }} <br> Requis : {{ item.moyen }} </p>
+													<a href="/beta/{{ item.crypt }}" class="site-btn">Voir Corrigés</a>
+												</div>
+												<div class="dp-img">
+													<img class="img-fluid" src="Assets/images/quiz/{{ random(['1','31', '2', '31', '3', '4', '5', '31', '6', '7', '8', '9', '10', '31', '11', '12', '13', '14', '31', '15', '16', '17', '18', '31', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30']) }}.jpg" alt="investing">
+												</div>
+											</div>
+											{% endfor %}
+										</div>
+
+										<span id="dp-next">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 51.401 51.401">
+        <defs>
+          <style>
+            .cls-1 {
+				fill: none;
+				stroke: #fa8c8c;
+				stroke-miterlimit: 10;
+				stroke-width: 7px;
+			}
+          </style>
+        </defs>
+        <path id="Rectangle_4_Copy" data-name="Rectangle 4 Copy" class="cls-1" d="M32.246,0V33.178L0,31.953" transform="translate(0.094 25.276) rotate(-45)"/>
+      </svg>
+    </span>
+
+										<span id="dp-prev">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 51.401 51.401">
+        <defs>
+          <style>
+            .cls-1 {
+				fill: none;
+				stroke: #fa8c8c;
+				stroke-miterlimit: 10;
+				stroke-width: 7px;
+			}
+          </style>
+        </defs>
+        <path id="Rectangle_4_Copy" data-name="Rectangle 4 Copy" class="cls-1" d="M32.246,0V33.178L0,31.953" transform="translate(0.094 25.276) rotate(-45)"/>
+      </svg>
+    </span>
+
+
+
+										<ul id="dp-dots">
+                    {% for item in info.quiz %}
+											<li data-class="{{loop.index}}" class=" {{(loop.index == 1 )? 'active' : ''}}"></li>
+                      {% endfor %}
+										</ul>
+									</div>
+								</div>
+							</div>
+              {% endif %}
     </div>
 
     <div class="profile-card-message js-message">
       <form class="profile-card-form">
         <div class="profile-card-form__container">
-          <textarea placeholder="Say something..."></textarea>
+          <form method="POST">
+          <input type="password" name="oldPass" placeholder="Ancien Mote de passe" required>
+          <input type="password" name="new" placeholder="Nouveau Mote de passe" required>
+          <input type="password" name="confirm" placeholder="Confirme Mote de passe" required>
+          <form>
+        </div>
+
+        <div class="profile-card-form__bottom">
+          <button class="profile-card__button button--blue js-message-close">
+            Send
+          </button>
+
+          <button class="profile-card__button button--gray js-message-close">
+            Cancel
+          </button>
+        </div>
+      </form>
+
+      <div class="profile-card__overlay js-message-close"></div>
+    </div>
+    <div class="profile-card-message js-message2">
+      <form class="profile-card-form">
+        <div class="profile-card-form__container">
+          <form method="POST">
+          <input type="password" name="oldPass" placeholder="Ancien Mote de passe" required>
+          <input type="password" name="new" placeholder="Nouveau Mote de passe" required>
+          <input type="password" name="confirm" placeholder="Confirme Mote de passe" required>
+          <form>
         </div>
 
         <div class="profile-card-form__bottom">
@@ -209,3 +320,63 @@
     </symbol>
   </defs>
 </svg>
+<script src="/socket.io/socket.io.js"></script>
+            <script type="text/javascript" src="../Assets/Js/jquery-3.3.1.min.js"></script>
+            <script type="text/javascript" src="../Assets/Js/fontawesome-all.js"></script>
+            <script type="text/javascript" src="../Assets/Js/jquery.notify.js"></script>
+            <script type="text/javascript" src="../Assets/Js/popper.min.js"></script>
+            <script type="text/javascript" src="../Assets/Js/bootstrap.min.js"></script>
+            <script type="text/javascript" src="../Assets/Js/mdb.min.js"></script>
+            <script type="text/javascript" src="../Assets/Js/slideout.min.js"></script>
+            		<script>
+			$(document).ready(function() {
+                function detect_active(){
+                    // get active
+                    var get_active = $("#dp-slider .dp_item:first-child").data("class");
+                    $("#dp-dots li").removeClass("active");
+                    $("#dp-dots li[data-class="+ get_active +"]").addClass("active");
+                }
+                $("#dp-next").click(function(){
+                    var total = $(".dp_item").length;
+                    $("#dp-slider .dp_item:first-child").hide().appendTo("#dp-slider").fadeIn();
+                    $.each($('.dp_item'), function (index, dp_item) {
+                        $(dp_item).attr('data-position', index + 1);
+                    });
+                    detect_active();
+
+                });
+
+                $("#dp-prev").click(function(){
+                    var total = $(".dp_item").length;
+                    $("#dp-slider .dp_item:last-child").hide().prependTo("#dp-slider").fadeIn();
+                    $.each($('.dp_item'), function (index, dp_item) {
+                        $(dp_item).attr('data-position', index + 1);
+                    });
+
+                    detect_active();
+                });
+
+                $("#dp-dots li").click(function(){
+                    $("#dp-dots li").removeClass("active");
+                    $(this).addClass("active");
+                    var get_slide = $(this).attr('data-class');
+                    $("#dp-slider .dp_item[data-class=" + get_slide + "]").hide().prependTo("#dp-slider").fadeIn();
+                    $.each($('.dp_item'), function (index, dp_item) {
+                        $(dp_item).attr('data-position', index + 1);
+                    });
+                });
+
+
+                $("body").on("click", "#dp-slider .dp_item:not(:first-child)", function(){
+                    var get_slide = $(this).attr('data-class');
+                    $("#dp-slider .dp_item[data-class=" + get_slide + "]").hide().prependTo("#dp-slider").fadeIn();
+                    $.each($('.dp_item'), function (index, dp_item) {
+                        $(dp_item).attr('data-position', index + 1);
+                    });
+
+                    detect_active();
+                });
+      });
+    </script>
+    </body>  
+</html>

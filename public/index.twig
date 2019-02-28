@@ -31,7 +31,7 @@
     <ul class="answers">
     {% for item in info.Ques[info.niveauActuel].responses %}
       <li class="answer box {{ (item.choice == 1) ? 'active' : ''}}" data-ryu-choice="{{ item.crypt }}">
-        <p> <span> {% if loop.index == 1 %} a {% elseif loop.index == 2 %} b {% elseif loop.index == 3 %} c {% elseif loop.index == 4 %} d, {% elseif loop.index == 5 %} e {% elseif loop.index == 6 %} f {% elseif loop.index == 7 %} g {% endif %}</span> {{ item.content }} </p>
+        <p> <span> {% if loop.index == 1 %} a {% elseif loop.index == 2 %} b {% elseif loop.index == 3 %} c {% elseif loop.index == 4 %} d {% elseif loop.index == 5 %} e {% elseif loop.index == 6 %} f {% elseif loop.index == 7 %} g {% endif %}</span> {{ item.content }} </p>
         {% if item.choice == 1 %} <span class="checkmark">&#x2713;</span> {% endif %}
         </li>
    {% endfor %}

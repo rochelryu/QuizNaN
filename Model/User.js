@@ -47,6 +47,28 @@ let User = class {
         })
     }
 
+    static getAllQuizFromProfil(){
+        return new Promise((next) =>{
+            db.query("SELECT COUNT(id) as sous FROM souscateg")
+                .then((result) =>{
+                    next(result[0]);
+                }).catch((error) => {
+                next(error);
+            });
+        })
+    }
+
+    static getAllQuizByStudent(stud){
+        return new Promise((next) =>{
+            db.query("SELECT * FROM moyenne LEFT JOIN souscateg ON moyenne.souscategorie_id = souscateg.id WHERE moyenne.student_id = ? ORDER BY moyenne.id DESC", [parseInt(stud, 10)])
+                .then((result) =>{
+                    next(result);
+                }).catch((error) => {
+                next(error);
+            });
+        })
+    }
+
     static getMoyOfQuizBySousquizId(catId){
         return new Promise((next) =>{
             db.query("SELECT AVG(note) ele FROM moyenne WHERE souscategorie_id = ?", [parseInt(catId, 10)])
@@ -91,7 +113,7 @@ let User = class {
     }
 
     static getQuestionBySousCategorieId(cateID){
-        return new Promise((next) =>{
+        return new Promise((next) => {
             db.query("SELECT * FROM question WHERE SousCate = ?", [parseInt(cateID, 10)])
                 .then((result) =>{
                     next(result);
@@ -103,7 +125,7 @@ let User = class {
 
     static getResponseByQuestionId(QuestId){
         return new Promise((next) =>{
-            db.query("SELECT id,content,files,crypt FROM response WHERE question_Id = ?", [parseInt(QuestId, 10)])
+            db.query("SELECT id,content,files,crypt, ele FROM response WHERE question_Id = ?", [parseInt(QuestId, 10)])
                 .then((result) =>{
                     next(result);
                 }).catch((error) => {
@@ -572,7 +594,6 @@ let User = class {
                         next(new Error('Mauvaise Reponse'))
                     }
                 }).catch((error) => {
-                    console.log(error);
                 next(error);
             });
         })

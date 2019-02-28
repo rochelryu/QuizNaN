@@ -146,14 +146,17 @@ a {
 .ele{
   position: absolute;
   top: 0;
+  width: 100%;
+  bottom: 0;
   left: 0;
-  min-width: 100%;
+  right: 0;
   z-index: -1;
 }
 /**
  * Boxes
  */
 .box {
+  min-height: 600px;
   position: relative;
   overflow: hidden;
   border-radius: 4px;
@@ -245,7 +248,7 @@ a {
 }
 
 .box .content .enter a{
-  width: 100% !important;
+  width: 100% ;
   background-color: #593320;
   color: #fff;
   outline: none;
@@ -306,7 +309,17 @@ a {
   body, .panel {
     background: url(../images/2001110.jpg) no-repeat;
     background-size: cover;
-    background-attachment: fixed;
+}
+.box{
+  min-height: 350px;
+}
+.box .content .enter a{
+  background-color: #593320;
+    color: #fff;
+    width: auto !important;
+    outline: none;
+    border-radius: 30px;
+    box-shadow: 0 0 10px #ba842a;
 }
 }
 

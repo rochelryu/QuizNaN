@@ -1,0 +1,69 @@
+<!doctype html>
+<!--[if IE 8]><html class="ie8 lt-ie10"><![endif]-->
+<!--[if IE 9]><html class="ie9 lt-ie10"><![endif]-->
+<!--[if gt IE 9]><!--><html lang="fr"><!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="cleartype" content="on">
+    <meta name="MobileOptimized" content="320">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <link rel="icon" type="image/png" href="../assets/images/icon/logo.png" />
+        <link href="../Assets/Css/fontawesome-all.css" rel="stylesheet">
+        <link href="../Assets/Css/bootstrap.min.css" rel="stylesheet">
+        <link href="../Assets/Css/mdb.min.css" rel="stylesheet">
+        <link href="../Assets/Css/jquery.notify.css" rel="stylesheet">
+    <link rel="stylesheet" href="../Assets/Css/stylePr.css">
+    <title>{{ user.pseudo|capitalize }}</title>
+    <script src="../Assets/Js/instascan.min.js"></script>
+  </head>
+  <body>
+  <div class="quiz-container">
+  {% for item in info.Questions %}
+    <div class="question box">
+      <p> <span>{{ loop.index }}.</span> {{ item.content }} {% if item.files != null %} <br> <img src="Assets/images/quiz/{{ item.files }}" class="img-fluid img-perso" /> {% endif %}
+     </p>
+    </div>
+
+     <ul class="answers">
+    {% for items in item.responses %}
+    {% if items.check == 10 %}
+    <li class="answer box active">
+        <p> <span> {% if loop.index == 1 %} a {% elseif loop.index == 2 %} b {% elseif loop.index == 3 %} c {% elseif loop.index == 4 %} d {% elseif loop.index == 5 %} e {% elseif loop.index == 6 %} f {% elseif loop.index == 7 %} g {% endif %}</span> {{ items.content }} </p>
+        <span class="checkmark">&#x2713;</span>
+        </li>
+    {% elseif items.ele == 1 and items.check == undefined %}
+    <li class="answer box active">
+    <p> <span> {% if loop.index == 1 %} a {% elseif loop.index == 2 %} b {% elseif loop.index == 3 %} c {% elseif loop.index == 4 %} d {% elseif loop.index == 5 %} e {% elseif loop.index == 6 %} f {% elseif loop.index == 7 %} g {% endif %}</span> {{ items.content }} </p>
+        </li>
+    {% elseif items.check == 2 %}
+    <li class="answer box dactive">
+        <p> <span> {% if loop.index == 1 %} a {% elseif loop.index == 2 %} b {% elseif loop.index == 3 %} c {% elseif loop.index == 4 %} d {% elseif loop.index == 5 %} e {% elseif loop.index == 6 %} f {% elseif loop.index == 7 %} g {% endif %}</span> {{ items.content }} </p>
+        </li>
+    {% else %}
+    <li class="answer box">
+        <p> <span> {% if loop.index == 1 %} a {% elseif loop.index == 2 %} b {% elseif loop.index == 3 %} c {% elseif loop.index == 4 %} d {% elseif loop.index == 5 %} e {% elseif loop.index == 6 %} f {% elseif loop.index == 7 %} g {% endif %}</span> {{ items.content }} </p>
+        </li>
+    {% endif %}
+   {% endfor %}
+    </ul>
+  {% endfor %}
+      
+    <a href="/profil" class="box Send"> Retour Profil
+      <span> &#x203A;</span>
+    </a>
+  </div>
+  <script src="/socket.io/socket.io.js"></script>
+            <script type="text/javascript" src="../Assets/Js/jquery-3.3.1.min.js"></script>
+            <script type="text/javascript" src="../Assets/Js/fontawesome-all.js"></script>
+            <script type="text/javascript" src="../Assets/Js/jquery.notify.js"></script>
+            <script type="text/javascript" src="../Assets/Js/popper.min.js"></script>
+            <script type="text/javascript" src="../Assets/Js/bootstrap.min.js"></script>
+            <script type="text/javascript" src="../Assets/Js/mdb.min.js"></script>
+            <script type="text/javascript">
+    </script>
+    </body>  
+</html>
+  

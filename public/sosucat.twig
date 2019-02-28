@@ -75,7 +75,7 @@
 <header class="panel-header">
 <ul>
           <li><a href="/profil"> Profil</a></li>
-          <li><a href="/params">Params</a></li>
+          <li><a href="/">Accueil</a></li>
           <li><a href="/classe">Classement</a></li>
         </ul> 
       </header>
@@ -136,24 +136,6 @@
       <script type="text/javascript" src="../Assets/Js/popper.min.js"></script>
       <script type="text/javascript" src="../Assets/Js/bootstrap.min.js"></script>
       <script type="text/javascript" src="../Assets/Js/mdb.min.js"></script>
-      <script type="text/javascript" src="../Assets/Js/s.js"></script>
-    <script src="../Assets/Js/slideout.min.js"></script>
-    <script>
-      window.onload = function() {
-        var slideout = new Slideout({
-          'panel': document.getElementById('panel'),
-          'menu': document.getElementById('menu'),
-          'side': 'right'
-        });
-
-        document.querySelector('.js-slideout-toggle').addEventListener('click', function() {
-          slideout.toggle();
-        });
-
-        document.querySelector('.menu').addEventListener('click', function(eve) {
-          if (eve.target.nodeName === 'A') { slideout.close(); }
-        });
-      };
-    </script>
+      <script type="text/javascript" src="../Assets/Js/s.js"></script>    
   </body>
 </html>
