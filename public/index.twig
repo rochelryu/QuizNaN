@@ -20,6 +20,7 @@
     <script src="../Assets/Js/instascan.min.js"></script>
   </head>
   <body>
+    <input type="hidden" id="del" value="{{user.emailcrypt}}" disabled/>
   <div class="quiz-container">
     <div class="levelQ"> <div id="adent" class="absContent" style="right: {{ 100 - ((info.niveauActuel + 1) * 100) / info.niveauTotal  }}%"><p>{{ info.niveauActuel + 1 }}/{{ info.niveauTotal }}</p></div> </div>
     <div class="lem"><p>{{ info.timesQues }}</p></div>
@@ -40,7 +41,10 @@
       <span> &#x203A;</span>
     </button>
   </div>
-  <input type="hidden" id="del" value="{{user.emailcrypt}}" disabled/>
+
+  <div class="footer">
+	<p>&copy; 2019 <a href="https://www.nan.ci">NaN</a>. All rights reserved | <a href="#!">XXI</a></p>
+</div>
   <script src="/socket.io/socket.io.js"></script>
             <script type="text/javascript" src="../Assets/Js/jquery-3.3.1.min.js"></script>
             <script type="text/javascript" src="../Assets/Js/fontawesome-all.js"></script>

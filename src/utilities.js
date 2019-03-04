@@ -25,6 +25,11 @@ exports.verifUserConnected = (array, id) =>{
     }
     return user;
 }
+exports.arrondi = (data)=>{
+    data *= 100;
+    data = Math.round(data);
+    return data/100;
+}
 exports.verifImage = (_data) =>{
     let image = false;
     const re = /(?:\.([^.]+))?$/;

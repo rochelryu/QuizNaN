@@ -29,7 +29,6 @@ $(document).ready(function(){
 
 
     $("form").on('click', '.choiceQr', function(){
-      console.log('ICI')
       $("form").addClass('none');
       Instascan.Camera.getCameras().then(function (cameras) {
         if (cameras.length > 0) {
@@ -43,17 +42,7 @@ $(document).ready(function(){
         console.error(e);
       });
     })
-    /*$("button").click(function() {
-      if($(".active").length) {
-        if($(".active").index() === 1) {
-          alert("Well done!");
-        } else {
-          alert("Wrong answer!");
-        }
-      } else {
-        alert("Please select an answer!");
-      }
-    });*/
+    
     socket.on('vasy',function(data){
       $("#em").val(data.e);
       $("#ps").val(data.k);

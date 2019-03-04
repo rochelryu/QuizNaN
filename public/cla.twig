@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="fr">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="cleartype" content="on">
+    <meta name="MobileOptimized" content="320">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <link rel="icon" type="image/png" href="assets/images/icon/logo.png" />
+        <link href="Assets/Css/fontawesome-all.css" rel="stylesheet">
+        <link href="Assets/Css/bootstrap.min.css" rel="stylesheet">
+        <link href="Assets/Css/mdb.min.css" rel="stylesheet">
+        <link href="Assets/Css/jquery.notify.css" rel="stylesheet">
+    <link rel="stylesheet" href="Assets/Css/test.css">
+    <link rel="stylesheet" href="Assets/Css/index.css">
+    <link rel="stylesheet" href="Assets/Css/style3.css">
+    <link rel="stylesheet" href="Assets/Css/datatables.min.css">
+    <title>{{ user.pseudo|capitalize }}</title>
+    <style>
+      .slideout-menu { left: auto; }
+      .btn-hamburger { left: auto; right: 12px;}
+    </style>
+  </head>
+  <body>
+
+    <main id="panel" class="panel">
+      <header class="panel-header">
+<ul>
+          <li><a href="/">Accueil</a></li>
+          <li><a href="/profil"> Profil</a></li>
+          <li><a href="/classe">Classement</a></li>
+          <li><a href="/logout">Deconnexion</a></li>
+        </ul> 
+      </header>
+
+      <div class="wrapper">
+
+  
+  <div class="profile-card js-profile-card">
+    <div class="profile-card__img">
+      <img src="Assets/images/Profil/{{ random(['1.jpg', '2.jpg' ]) }}" alt="profile card">
+    </div>
+
+    
+      <div class="clearfix"></div>
+    
+
+    <div class="container-fluid">
+    <div class="graph">
+                                                                                    <div class="tables">
+                                                                                        <table class="display table table-hover table-striped table-bordered dataTable" id="awitTable"  style="width: 100%;" role="grid" aria-describedby="example_info">
+                                                                                            <thead>
+                                                                                                <tr>
+                                                                                                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Profile: activate to sort column ascending">#</th>
+                                                                                                    <th>Pseudo</th>
+                                                                                                    <th>Moyenne General</th>
+                                                                                                </tr>
+                                                                                            </thead>
+                                                                                            <tbody>
+                                                                                            {% for item in info %}
+                                                                                                
+                                                                                                <tr>
+                                                                                                    <th scope="row">{{loop.index}}</th>
+                                                                                                    <td>{{item.pseudo}}</td>
+                                                                                                    <td>{{item.moy}}</td>
+                                                                                                </tr>
+                                                                                                
+                                                                                            {% endfor %}
+                                                                                            </tbody>
+                                                                                        </table>
+                                                                                    </div>
+                                                                        
+                                                                            </div>
+    </div>
+
+  </div>
+  </div>
+
+</div>
+
+
+  <div class="footer">
+	<p>&copy; 2019 <a href="https://www.nan.ci">NaN</a>. All rights reserved | <a href="#!">XXI</a></p>
+</div>
+<script src="/socket.io/socket.io.js"></script>
+            <script type="text/javascript" src="../Assets/Js/jquery-3.3.1.min.js"></script>
+            <script type="text/javascript" src="../Assets/Js/fontawesome-all.js"></script>
+            <script type="text/javascript" src="../Assets/Js/jquery.notify.js"></script>
+            <script type="text/javascript" src="../Assets/Js/popper.min.js"></script>
+            <script type="text/javascript" src="../Assets/Js/bootstrap.min.js"></script>
+            <script type="text/javascript" src="../Assets/Js/mdb.min.js"></script>
+            <script type="text/javascript" src="../Assets/Js/datatables.min.js"></script>
+            		<script>
+			$(document).ready(function() {
+                $('#awitTable').DataTable({
+        "dom": '<"toolbar">frtip',
+        "paging": true,
+        "pagingType": "full_numbers"
+    });
+      });
+    </script>
+    </body>  
+</html>

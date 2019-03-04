@@ -6,6 +6,9 @@ $(document).ready(function(){
 
 
       socket.on('resNes', function(data){
+          var dem = $('#panel').attr('data-ryu-ele');
+          dem = parseInt(dem, 10);
+          if(dem == data.cal){
         $("#moyG").html('<h6>' + data.gl + ' <i class="fas fa-chart-line"></i></h6>');
         $("#participant").html('<h6>' + data.name.length + ' <i class="fas fa-users"></i></h6>');
         var data = [{
@@ -15,7 +18,6 @@ $(document).ready(function(){
             "bars": data.note
         }];
     
-        // My options
         var options = {
             data: data[0],
             showValues: true,
@@ -25,10 +27,10 @@ $(document).ready(function(){
             animationOffset: 200,
         };
     
-        // Defaul chart
         var $myChart = $('#chart-1');
     
         $myChart.horizontalChart(options);
+    }
       })
  
     });

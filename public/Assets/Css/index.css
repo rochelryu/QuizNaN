@@ -111,14 +111,17 @@ a {
 }
 
 .panel-header ul li a{
-  color: #FFF !important;
+  color: #FFF;
   font-weight: bolder;
   font-size: larger;
+  transition: .5s all;
 
 }
 .panel-header ul li a:hover{
-  color: #ad95f9;
+  color: #ad95f9 !important;
   font-size: x-large;
+  border-bottom: 1px solid #ad95f9;
+  transition: .5s all;
 }
 .title {
   font-size: 3.2em;
@@ -152,11 +155,41 @@ a {
   right: 0;
   z-index: -1;
 }
+/*--footer--*/
+.footer p {
+  margin: 1.8em 0;
+  color: #fff;
+  font-size: 1em;
+  letter-spacing: 2px;
+  font-weight:400;
+}
+.footer{
+  text-align: center;
+  margin-top: -15px;
+}
+.footer a {
+  color: #fff;
+transition:0.5s all;
+-webkit-transition:0.5s all;
+-o-transition:0.5s all;
+-moz-transition:0.5s all;
+-ms-transition:0.5s all;
+}
+.footer a:hover {
+  color:#ad95f9;
+  text-decoration: underline;
+transition:0.5s all;
+-webkit-transition:0.5s all;
+-o-transition:0.5s all;
+-moz-transition:0.5s all;
+-ms-transition:0.5s all;
+}
+/*--//footer--*/
 /**
  * Boxes
  */
 .box {
-  min-height: 600px;
+  min-height: 580px;
   position: relative;
   overflow: hidden;
   border-radius: 4px;

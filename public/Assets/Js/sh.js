@@ -17,17 +17,6 @@ $(document).ready(function(){
         socket.emit('levUp', {pel:pel, del:del});
       })
   
-      /*$("button").click(function() {
-        if($(".active").length) {
-          if($(".active").index() === 1) {
-            alert("Well done!");
-          } else {
-            alert("Wrong answer!");
-          }
-        } else {
-          alert("Please select an answer!");
-        }
-      });*/
 
       socket.on('new', function(data){
         var fileQ = "";

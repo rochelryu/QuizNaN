@@ -40,9 +40,10 @@
     <main id="panel" class="panel" data-ryu-ele="{{ info.moy.souscategorie_id }}">
 <header class="panel-header">
 <ul>
+<li><a href="/">Accueil</a></li>
           <li><a href="/profil"> Profil</a></li>
-          <li><a href="/">Accueil</a></li>
           <li><a href="/classe">Classement</a></li>
+          <li><a href="/logout">Deconnexion</a></li>
         </ul> 
       </header>
       <video src="Assets/videos/{{ random(['1', '2', '3', '4']) }}.mp4" class="ele" autoplay muted loop></video>
@@ -105,17 +106,20 @@
                     <!--// Stats -->
                     <!-- Pie-chart -->
             <div class="outer-w3-agile col-xl ml-xl-3 mt-xl-0 mt-3">
-                        <h4 class="tittle-w3-agileits mb-4">Pie Chart</h4>
+                        <h4 class="tittle-w3-agileits mb-4">Rendement</h4>
                         <div id="chartdiv"></div>
             </div>
         </div>
         <div class="row">
         <div class="outer-w3-agile mt-3 mw">
-                <h4 class="tittle-w3-agileits mb-4">Bar Chart</h4>
+                <h4 class="tittle-w3-agileits mb-4">Classement en Temps Réel</h4>
                 <div id="chart-1"></div>
             </div>
         </div>
       </div>
+      <div class="footer">
+	<p>&copy; 2019 <a href="https://www.nan.ci">NaN</a>. All rights reserved | <a href="#!">XXI</a></p>
+</div>
           </main>
     <script src="/socket.io/socket.io.js"></script>
       <script type="text/javascript" src="../Assets/Js/jquery-3.3.1.min.js"></script>

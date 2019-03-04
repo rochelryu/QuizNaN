@@ -55,13 +55,14 @@ body, html {
 }
 
 body {
-  padding-top: 900px;
+  height: auto;
   font-family: 'Lato', sans-serif;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background: url('../images/2001110.jpg') no-repeat 0 -500px;
+  background: url('../images/2001110.jpg') no-repeat;
 background-size: cover;
+background-attachment: fixed;
 }
 p{
   margin-bottom: 0px !important;
@@ -144,6 +145,32 @@ p{
         cursor: pointer;
         color: #2ecc71;
   } 
+  /*--footer--*/
+.footer p {
+  margin: 1.8em 0;
+  color: #fff;
+  font-size: 1em;
+  letter-spacing: 2px;
+  font-weight:400;
+}
+.footer a {
+  color: #fff;
+transition:0.5s all;
+-webkit-transition:0.5s all;
+-o-transition:0.5s all;
+-moz-transition:0.5s all;
+-ms-transition:0.5s all;
+}
+.footer a:hover {
+  color:#efbf31;
+  text-decoration: underline;
+transition:0.5s all;
+-webkit-transition:0.5s all;
+-o-transition:0.5s all;
+-moz-transition:0.5s all;
+-ms-transition:0.5s all;
+}
+/*--//footer--*/
          .answers .answer.active span:not([class^="checkmark"]) {
           background-color: #2ecc71;
         }
@@ -217,7 +244,9 @@ p{
 }
 @media screen and (max-width: 592px){
   body {
+    height: auto;
     background: url(../images/2001110.jpg) no-repeat;
     background-size: cover;
     background-attachment: fixed;
+}
 }

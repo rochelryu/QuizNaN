@@ -28,9 +28,10 @@
     <main id="panel" class="panel">
       <header class="panel-header">
 <ul>
-          <li><a href="/profil"> Profil</a></li>
           <li><a href="/">Accueil</a></li>
+          <li><a href="/profil"> Profil</a></li>
           <li><a href="/classe">Classement</a></li>
+          <li><a href="/logout">Deconnexion</a></li>
         </ul> 
       </header>
       <video src="Assets/videos/{{ random(['1', '2', '3', '4']) }}.mp4" class="ele" autoplay muted loop></video>
@@ -41,10 +42,11 @@
           <ul class="EleQuiz">
           <li>
             <h2>
-            {{ info.title }}
+            {{ (info.title != undefined)? info.title: 'Aucun quiz pour le moment' }}
             <h2>
           </li>
 
+          {% if info.end != undefined %}
           <li class="descDate">
             {{ info.end|date('d/m/Y H:i') }}
           </li>
@@ -53,9 +55,19 @@
           <div class="enter">
           <a href="/ownL/{{ info.crypt }}" class="btn">Entrer
           </a>
+          {% else %}
+            <li class="descDate">
+            Revenez un peu plus tard {{user.pseudo}}.
+          </li>
+          </ul>
+          </div>
+          {% endif %}
           </div>
         </div>
       </section>
+      <div class="footer">
+	<p>&copy; 2019 <a href="https://www.nan.ci">NaN</a>. All rights reserved | <a href="#!">XXI</a></p>
+</div>
     </main>
     <script src="/socket.io/socket.io.js"></script>
       <script type="text/javascript" src="Assets/Js/jquery-3.3.1.min.js"></script>

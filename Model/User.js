@@ -40,7 +40,7 @@ let User = class {
         return new Promise((next) =>{
             db.query("SELECT * FROM quiz WHERE status = 1")
                 .then((result) =>{
-                    next(result[0]);
+                    next(result);
                 }).catch((error) => {
                 next(error);
             });
@@ -281,6 +281,7 @@ let User = class {
                 if(result[0] !== undefined){
                     db.query("UPDATE entrer SET response_id = ?  WHERE student_id = ? AND question_id = ?", [parseInt(res_id, 10), parseInt(student_Id, 10), parseInt(quesId, 10)])
                     .then((results)=>{
+                        console.log('jai update')
                         next(results)
                     }).catch((err)=>{ 
                         console.log(err)
@@ -289,6 +290,7 @@ let User = class {
                 else{
                     db.query("INSERT INTO entrer (response_id,student_id,question_id) VALUES (?,?,?)", [parseInt(res_id, 10), parseInt(student_Id, 10), parseInt(quesId, 10)])
                     .then((resultss)=>{
+                        console.log('jai update')
                         next(resultss)
                     }).catch((errs)=>{
                         console.log(errs)
@@ -308,6 +310,7 @@ let User = class {
                 if(result[0] !== undefined){
                     db.query("UPDATE entrer SET response_id = null  WHERE student_id = ? AND question_id = ?", [parseInt(student_Id, 10), parseInt(quesId, 10)])
                     .then((results)=>{
+                        console.log('jai update');
                         next(results)
                     }).catch((err)=>{ 
                         console.log(err)
@@ -316,7 +319,8 @@ let User = class {
                 else{
                     db.query("INSERT INTO entrer (student_id,question_id) VALUES (?,?)", [parseInt(student_Id, 10), parseInt(quesId, 10)])
                     .then((resultss)=>{
-                        next(resultss)
+                        console.log('jai insert');
+                        next(resultss[0])
                     }).catch((errs)=>{
                         console.log(errs)
                         next(errs)})
@@ -326,16 +330,36 @@ let User = class {
             })
         })
     }
+    static getRanking(){
+        return new Promise((next)=>{
+            db.query('SELECT AVG(moyenne.note) moy, student.pseudo FROM moyenne LEFT JOIN student ON moyenne.student_id = student.id GROUP BY moyenne.student_id ORDER BY moy DESC')
+            .then((ress)=>{
+                next(ress);
+            }).catch((err)=> next(err))
+        })
+    }
 
     static setNote(souscateg, student_Id, note, erro, times, etat, trouve){
         return new Promise((next)=>{
-            db.query("INSERT INTO moyenne (souscategorie_id, student_id, note, errors, time, etat, trouve) VALUES (?,?,?,?,?,?,?)", [parseInt(souscateg, 10), parseInt(student_Id, 10), note, parseInt(erro, 10), parseInt(times, 10), parseInt(etat, 10), parseInt(trouve, 10)])
-            .then((result)=>{
-                next(result[0]);
-            }).catch((err)=>{
-                console.log(err);
-                next(err);
-            })
+            db.query("SELECT * FROM moyenne WHERE  souscategorie_id = ? AND student_id = ?", [parseInt(souscateg, 10), parseInt(student_Id, 10)])
+            .then((ress)=>{
+                if(ress[0] !== undefined){
+                    db.query("UPDATE moyenne SET souscategorie_id = ?, student_id = ?, note = ?, errors = ?, time = ?, etat = ?, trouve = ? WHERE souscategorie_id = ? AND student_id = ?", [parseInt(souscateg, 10), parseInt(student_Id, 10), note, parseInt(erro, 10), parseInt(times, 10), parseInt(etat, 10), parseInt(trouve, 10), parseInt(souscateg, 10), parseInt(student_Id, 10)])
+                        .then((results)=>{
+                            next(results[0]);
+                        }).catch((errs)=>{
+                            next(errs);
+                        })
+                }
+                else{
+                    db.query("INSERT INTO moyenne (souscategorie_id, student_id, note, errors, time, etat, trouve) VALUES (?,?,?,?,?,?,?)", [parseInt(souscateg, 10), parseInt(student_Id, 10), note, parseInt(erro, 10), parseInt(times, 10), parseInt(etat, 10), parseInt(trouve, 10)])
+                        .then((result)=>{
+                            next(result[0]);
+                        }).catch((err)=>{
+                            next(err);
+                        })
+                }
+            }).catch((errors)=>{next(errors)})
         })
     }
 

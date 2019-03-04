@@ -21,7 +21,6 @@
     <style>
       .slideout-menu { left: auto; }
       .btn-hamburger { left: auto; right: 12px;}
-      .box { min-height: 650px; }
     </style>
     <script>
     function horodatage(date) {
@@ -74,9 +73,10 @@
     <main id="panel" class="panel" data-ryu-ele="{{ user.emailcrypt }}">
 <header class="panel-header">
 <ul>
-          <li><a href="/profil"> Profil</a></li>
           <li><a href="/">Accueil</a></li>
+          <li><a href="/profil"> Profil</a></li>
           <li><a href="/classe">Classement</a></li>
+          <li><a href="/logout">Deconnexion</a></li>
         </ul> 
       </header>
       <video src="../Assets/videos/{{ random(['1', '2', '3', '4']) }}.mp4" class="ele" autoplay muted loop></video>
@@ -129,6 +129,10 @@
       
       </div>
     </main>
+    <div class="footer">
+	<p>&copy; 2019 <a href="https://www.nan.ci">NaN</a>. All rights reserved | <a href="#!">XXI</a></p>
+</div>
+      
     <script src="/socket.io/socket.io.js"></script>
       <script type="text/javascript" src="../Assets/Js/jquery-3.3.1.min.js"></script>
       <script type="text/javascript" src="../Assets/Js/fontawesome-all.js"></script>
