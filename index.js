@@ -533,12 +533,14 @@ mysql.createConnection({
                     if(!isErr(tcheck) && respo.response_id !== null){
                         trouve =  trouve + 1;
                         note += (100 / compo[isExist(compo, data)].niveauTotal);
+                        console.log('Note augmente' + note)
                     }
                     else if(isErr(tcheck) && respo.response_id !== null){
                         erreur = erreur + 1;
-                        if(note !== 0){
+                        /*if(note !== 0){
                             note -= (100 / compo[isExist(compo, data)].niveauTotal);
-                        }
+                        }*/
+                        console.log('Note diminue' + note)
                     }
                     else{
                         note = note;
@@ -549,7 +551,7 @@ mysql.createConnection({
                 const etat = (note >= moy.moyen) ? 1 : 0;
                 let time =  compo[isExist(compo, data)].totalTimes - compo[isExist(compo, data)].VraiTimes;
                 const intent = await User.setNote(compo[isExist(compo, data)].sousQuiz, stu.id, note, erreur, time, etat, trouve);
-                        
+
                         socket.emit('bblank');
                         clearInterval(global.sliderInterval[isExist(global.sliderInterval, data)].begin);
                     }
@@ -605,12 +607,16 @@ mysql.createConnection({
                     if(!isErr(tcheck) && respo.response_id !== null){
                         trouve =  trouve + 1;
                         note += (100 / compo[isExist(compo, data)].niveauTotal);
+                                                console.log('Note aug' + note)
+
                     }
                     else if(isErr(tcheck) && respo.response_id !== null){
                         erreur = erreur + 1;
-                        if(note !== 0){
+                        /*if(note !== 0){
                             note -= (100 / compo[isExist(compo, data)].niveauTotal);
-                        }
+                        }*/
+                                                console.log('Note diminue' + note)
+
                     }
                     else{
                         note = note;
@@ -682,12 +688,17 @@ mysql.createConnection({
                     if(!isErr(tcheck) && respo.response_id !== null){
                         trouve =  trouve + 1;
                         note += (100 / compo[isExist(compo, data.del)].niveauTotal);
+                                                console.log('Note aug' + note)
+
                     }
                     else if(isErr(tcheck) && respo.response_id !== null){
                         erreur = erreur + 1;
-                        if(note !== 0){
+                        /*if(note !== 0){
+
                             note -= (100 / compo[isExist(compo, data.del)].niveauTotal);
-                        }
+                        }*/
+                                                console.log('Note diminue' + note)
+
                     }
                     else{
                         note = note;
@@ -721,12 +732,16 @@ mysql.createConnection({
                     if(!isErr(tcheck) && respo.response_id !== null){
                         trouve =  trouve + 1;
                         note += (100 / compo[isExist(compo, data.del)].niveauTotal);
+                                                console.log('Note aug' + note)
+
                     }
                     else if(isErr(tcheck) && respo.response_id !== null){
                         erreur = erreur + 1;
-                        if(note !== 0){
+                        /*if(note !== 0){
                             note -= (100 / compo[isExist(compo, data.del)].niveauTotal);
-                        }
+                        }*/
+                                                console.log('Note diminue' + note)
+
                     }
                     else{
                         note = note;
